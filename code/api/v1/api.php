@@ -21,7 +21,8 @@
   $app->get('/medicines/:forDate', function($forDate){
 
      // TODO Add proper string escaping to avoid SQL injections!
-    // TODO This SQL will miss all doses that have been given prior to $forDate; log.medicineGiven is neither null nor DATE(log.medicineGiven)=$forDate for such doses
+
+    // First SQL: Retrieve medcines and their doeses
     $sql = 
     "SELECT
       d.id as id, m.name as medicine, d.dose as dose, d.preferredTime as time
@@ -45,6 +46,7 @@
     }
     $strDoseIds = implode(',', array_keys($arrDoseIds));
 
+    // Second SQL: Complement with logs of how much medicine that has been given
     $sql = 
       "SELECT log.medicineDose_id as doseId, a.firstName as givenBy, log.medicineGiven as givenTime  
       FROM medicineUsageLog log
