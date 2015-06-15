@@ -6,7 +6,7 @@ medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
 });
 
 
-medicineApp.controller('CreateLogCtrl', function ($scope, $http) {
+medicineApp.controller('CreateLogCtrl', function ($scope, $http, $modal, $log) {
 
 Date.prototype.yyyymmdd = function() {
    var yyyy = this.getFullYear().toString();
@@ -64,6 +64,31 @@ Date.prototype.yyyymmdd = function() {
   }
 
   $scope.storeComplete = false;
+
+  $scope.cancelSave = function () {
+    $modalInstance.dismiss('cancel');
+  };  
+
+  $scope.openSaveConfirmation = function (size) {
+
+      var modalInstance = $modal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: 'saveConfirmation.html',
+        controller: 'SaveConfirmationModalCtrl',
+        size: size,
+        resolve: {
+          medicationToStore: function () {
+            return $scope.medicationToStore;
+          }
+        }
+      });
+
+    modalInstance.result.then(function () {
+      $scope.saveChanges();
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });      
+  };
 
   $scope.saveChanges = function() {
     $http.post('/api/v1/medication', $scope.medicationToStore).success( 
@@ -163,6 +188,18 @@ medicineApp.controller('ViewLogListCtrl', ['$scope', '$routeParams', '$http',
     
 }]);
 
+medicineApp.controller('SaveConfirmationModalCtrl', function ($scope, $modalInstance, medicationToStore) {
+
+  $scope.medicationToStore = medicationToStore;
+
+  $scope.ok = function () {
+    $modalInstance.close(); // OK
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
 
 // User selection controllers
 medicineApp.controller('UserSelectionOpenerCtrl', function ($scope, $modal, $log) {

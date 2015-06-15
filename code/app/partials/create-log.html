@@ -1,4 +1,23 @@
 <h1>Mediciner</h1>
+
+    <script type="text/ng-template" id="saveConfirmation.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Bekräfta given medicin</h3>
+        </div>
+        <div class="modal-body">
+        	<p>Genom att klicka på OK nedan bekräftar du att du vill spara nedanstående medicinering given av <strong>{{medicationToStore[0].givenBy}}</strong></p>
+            <ul>
+                <li ng-repeat="med in medicationToStore">
+                    {{med.medicine}}, {{med.dose}}
+                </li>
+            </ul>
+            
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
     
     <div class="row">
     	<div class="col-md-4"><h4>Visa medicinlista för</h4></div>
@@ -36,7 +55,7 @@
 				<td>{{medicine.givenBy}} {{medicine.givenTime | date:short}}</td>
 			</tr>
 		</table>
-		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="saveChanges()">
+		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="openSaveConfirmation()">
 			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': storeComplete,'glyphicon-floppy-disk':!storeComplete}" aria-hidden="true"></span> Spara
 		</button>
 		
