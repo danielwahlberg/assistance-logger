@@ -86,12 +86,15 @@
   $app->post('/medication/', function() use ($app){
     $arrInput = $app->request()->getBody();
 
-    $sql ="
-      INSERT INTO medicineUsageLog (medicineDose_id, assistant_id, medicineGiven)
-      VALUES(".$arrInput[0]['id'].", {$arrInput[0]['givenByAssistantId']}, NOW())
-    ";
-    $db = connect_db();
-    $db->query($sql);
+    foreach ($arrInput as $currentInput) {
+      $sql ="
+        INSERT INTO medicineUsageLog (medicineDose_id, assistant_id, medicineGiven)
+        VALUES(".$currentInput['id'].", {$currentInput['givenByAssistantId']}, NOW())
+      ";
+      $db = connect_db();
+      $db->query($sql);
+    }
+
   });
 
   $log = $app->getLog();
