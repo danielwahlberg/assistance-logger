@@ -8,4 +8,6 @@ function connect_db() {
 
 	return $connection;
 }
+
+
 ?>

@@ -19,8 +19,8 @@
   });
 
   $app->get('/medicines/:forDate', function($forDate){
-
-     // TODO Add proper string escaping to avoid SQL injections!
+    $db = connect_db();
+    $forDateEscaped = $db->real_escape_string($forDate);
 
     // First SQL: Retrieve medcines and their doeses
     $sql = 
@@ -29,12 +29,12 @@
     FROM
       medicine m
     INNER JOIN medicineDose d ON d.medicine_id = m.id
-    WHERE d.startDate <= '$forDate'
-      AND (d.endDate IS NULL OR d.endDate >= '$forDate')
+    WHERE d.startDate <= '$forDateEscaped'
+      AND (d.endDate IS NULL OR d.endDate >= '$forDateEscaped')
     ORDER BY d.preferredTime
       ";
     
-    $db = connect_db();
+    
     $result = $db->query( $sql );
 
     $arrDoseIds = array(); // dose id => $data array index
@@ -52,7 +52,7 @@
       FROM medicineUsageLog log
       INNER JOIN assistant a ON a.id = log.assistant_id
       WHERE medicineDose_id IN($strDoseIds)
-        AND DATE(log.medicineGiven) = '$forDate'
+        AND DATE(log.medicineGiven) = '$forDateEscaped'
     ";
     $db = connect_db();
     $result = $db->query( $sql );
