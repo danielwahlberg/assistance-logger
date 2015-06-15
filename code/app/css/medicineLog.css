@@ -1,0 +1,11 @@
+/**
+ * 
+ */
+
+/* Log medicines styles */
+.medicineGiven td{
+	font-style: italic;
+}
+.stateStored td.medicineName{
+	text-decoration: line-through;
+}

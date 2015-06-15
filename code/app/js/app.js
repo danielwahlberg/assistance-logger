@@ -1,0 +1,1 @@
+var medicineApp = angular.module('medicineApp', ['ngRoute', 'ui.bootstrap']);
