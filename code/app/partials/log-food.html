@@ -1,0 +1,74 @@
+<div class="row">
+	<h1>Mat</h1>
+</div>
+<div class="row">
+	<h3>Logga matning</h3>
+</div>
+<div class="row">
+	<div class="col-md-3">
+		<h4>Vem gav maten?</h4>
+	</div>
+    <div class="col-md-6">
+    	<div class="btn-group">
+		  <button type="button" class="btn btn-default">{{getCurrentAssistantName()}}</button>
+		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    <span class="caret"></span>
+		    <span class="sr-only">Toggle Dropdown</span>
+		  </button>
+		  <ul class="dropdown-menu">
+		    <li ng-repeat="assistant in assistants"><a ng-click="selectAssistant(assistant)">{{assistant.name}}</a></li>
+		  </ul>
+		</div>
+		<!--
+    	Loggar medicinering för    	
+    	<select ng-model="currentAssistant" ng-options="assistant as assistant.name for assistant in assistants">
+    	</select>
+    	-->
+    </div>
+</div>
+<form>
+	<div class="row">
+		<div class="col-md-3">
+			<h4>Vilken mat/dryck har givits?</h4>
+		</div>
+		<div class="col-md-3">
+			<span class="btn-group" role="group">
+			  <button type="button" class="btn" ng-class="{'btn-selected':feedingToStore.foodType==foodType, 'btn-default':feedingToStore.foodType!=foodType}" ng-repeat="foodType in foodTypes" ng-click="selectFoodType(foodType)">{{foodType.name}}</button>
+			</span>
+		<!--</div>
+		<div class="col-md-4">-->
+			<span class="input-group input-group-md">
+			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="25" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
+			  <span class="input-group-addon" id="mealAmount">ml</span>
+			</span>
+		</div>
+	</div>
+	<div class="row">
+		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="saveChanges()">
+			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
+		</button>
+		<div class="alert alert-danger alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:errors.length==0}" role="alert" id="saveFailedAlert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<ul>
+				<li ng-repeat="error in errors">{{error}}</li>
+			</ul>
+		</div>		
+	</div>
+</form>
+<div class="row">
+	<h3>Sparad mat/dryck {{today | date:medium}}</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Mat</th>
+					<th>Mängd</th>
+					<th>Given av</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="meal in meals">
+				<td>{{meal.name}}</td>
+				<td>{{meal.amount}} {{meal.unit}}</td>
+				<td>{{meal.givenBy}} {{meal.feedingStoredAt | date:short}}</td>
+			</tr>
+		</table>
+</div>

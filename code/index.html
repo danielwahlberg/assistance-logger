@@ -22,6 +22,7 @@
   <script src="app/js/app.js"></script>
   <script src="app/js/routes.js"></script>
 	<script src="app/js/controller.js"></script>
+  <script src="app/js/foodController.js"></script>
 
     <!-- Angular UI -->
 	<script src="assets/js/ui-bootstrap-tpls-0.13.0.js"></script>
@@ -61,8 +62,8 @@
           <div id="navbar" class="navbar-collapse collapse" ng-controller="MainMenuCtrl">
             <ul class="nav navbar-nav">
               <li ng-class="{ active: isActive('/start')}"><a href="/#/start">Start</a></li>
-              <li ng-class="{ active: isActive('/createLog')}"><a href="/#/createLog">Logga medicinering</a></li>
-              <li ng-class="{ active: isActive('/viewLog')}"><a href="/#/viewLog">Lista tagen medicin</a></li>
+              <li ng-class="{ active: isActive('/logMedicine')}"><a href="/#/logMedicine">Medicinering</a></li>
+              <li ng-class="{ active: isActive('/logFood')}"><a href="/#/logFood">Mat</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li ng-class="{ active: isActive('/admin')}"><a href="./">Admin</a></li>
