@@ -2,6 +2,10 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 
   $http.get('/api/v1/food/feeding').success(function(data){
     $scope.meals = data    
+    $scope.sumAmount = 0;
+    for(i=0; i<$scope.meals.length; i++) {
+    	$scope.sumAmount += +$scope.meals[i].amount;
+    }
   });
 
   $http.get('/api/v1/assistants').success(function(data){
@@ -69,6 +73,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 	      		"givenBy" : $scope.feedingToStore.assistant.name		
 	      	}
       	);
+      	$scope.sumAmount += +$scope.feedingToStore.amount;
 	  })
     .error(
     	function(data,status,headers, config) {

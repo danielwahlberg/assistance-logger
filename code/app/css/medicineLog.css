@@ -9,3 +9,7 @@
 .stateStored td.medicineName{
 	text-decoration: line-through;
 }
+
+tfoot tr td {
+	font-weight: bold;
+}
