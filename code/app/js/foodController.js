@@ -19,7 +19,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 	{"name": "Sondmat",
 	 "id": "2"
 	},
-	{"name": "Vatten",
+	{"name": "Dryck",
 	 "id": "3"
 	}	
   ];
