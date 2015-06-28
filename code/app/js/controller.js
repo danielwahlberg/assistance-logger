@@ -16,15 +16,35 @@ Date.prototype.yyyymmdd = function() {
   };
 
   $scope.medicationToStore = [];
+  $scope.whenNeededMedicationToStore = null;
   $scope.selectedDate = new Date();
 
   $http.get('/api/v1/medicines/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
     $scope.medicines = data    
   });
+  $http.get('/api/v1/medicines/whenNeededMedicines/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
+    $scope.whenNeededMedicines = data    
+  });  
+  $http.get('/api/v1/medicines/whenNeededLog/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
+    $scope.whenNeededMedicineLog = data    
+  });  
 
   $http.get('/api/v1/assistants').success(function(data){
     $scope.assistants = data    
   });
+
+  $scope.getCurrentWhenNeededMedicine = function() {
+    var defaultText = "Medicin vid behov";
+
+    if($scope.whenNeededMedicationToStore == null)
+      return defaultText;
+    else
+      return $scope.whenNeededMedicationToStore.medicineName;
+  };
+
+  $scope.selectWhenNeededMedicine = function(medicine) {
+    $scope.whenNeededMedicationToStore = medicine;
+  };
 
   // Update medicine list when date is changed
   $scope.dateChanged = function(){
@@ -55,6 +75,7 @@ Date.prototype.yyyymmdd = function() {
       $scope.storeComplete=false;
     } else {
       selectedMedicine.givenBy = null;
+      // TODO Loop over medicationToStore and remove previously selected medicine
     }
 
   };
@@ -70,7 +91,11 @@ Date.prototype.yyyymmdd = function() {
   };  
 
   $scope.openSaveConfirmation = function (size) {
-
+      if($scope.whenNeededMedicationToStore != null){
+        $scope.whenNeededMedicationToStore.givenBy = $scope.currentAssistant.name;  
+        $scope.whenNeededMedicationToStore.givenByAssistantId = $scope.currentAssistant.id        
+        $scope.medicationToStore.push($scope.whenNeededMedicationToStore);
+      }
       var modalInstance = $modal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'saveConfirmation.html',

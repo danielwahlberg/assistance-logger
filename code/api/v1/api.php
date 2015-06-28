@@ -18,6 +18,55 @@
       echo "Hello, $name";
   });
 
+  $app->get('/medicines/whenNeededMedicines/:forDate', function($forDate){
+    $db = connect_db();
+    $forDateEscaped = $db->real_escape_string($forDate);
+    $sql = 
+        "SELECT
+          d.id as id, m.name as medicineName, d.dose as dose, d.preferredTime as time
+        FROM
+          medicine m
+        INNER JOIN medicineDose d ON d.medicine_id = m.id
+        WHERE d.startDate <= '$forDateEscaped'
+          AND (d.endDate IS NULL OR d.endDate >= '$forDateEscaped')
+          AND d.giveWhenNeeded = 1
+        ORDER BY d.preferredTime
+          ";
+
+    $result = $db->query( $sql );
+    while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
+      $data[] = $row;
+    }
+
+    echo json_encode($data);
+  });
+
+
+  /**
+   * Retrieve logged medication given because it was needed (not given regularly) 
+   */
+  $app->get('/medicines/whenNeededLog/:forDate', function($forDate){
+    $db = connect_db();
+    $forDateEscaped = $db->real_escape_string($forDate);
+    $sql = 
+        "SELECT m.name AS medicineName, d.dose, a.firstName as givenBy, log.medicineGiven as givenTime  
+      FROM medicineUsageLog log
+      INNER JOIN assistant a ON a.id = log.assistant_id
+      INNER JOIN medicineDose d ON log.medicineDose_id = d.id
+      INNER JOIN medicine m ON d.medicine_id = m.id
+      WHERE d.giveWhenNeeded = 1
+        AND DATE(log.medicineGiven) = '$forDateEscaped'
+          ";
+
+    $result = $db->query( $sql );
+    while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
+      $data[] = $row;
+    }
+
+    echo json_encode($data);
+  });
+
+
   $app->get('/medicines/:forDate', function($forDate){
     $db = connect_db();
     $forDateEscaped = $db->real_escape_string($forDate);
@@ -25,12 +74,13 @@
     // First SQL: Retrieve medcines and their doeses
     $sql = 
     "SELECT
-      d.id as id, m.name as medicine, d.dose as dose, d.preferredTime as time
+      d.id as id, m.name as medicineName, d.dose as dose, d.preferredTime as time
     FROM
       medicine m
     INNER JOIN medicineDose d ON d.medicine_id = m.id
     WHERE d.startDate <= '$forDateEscaped'
       AND (d.endDate IS NULL OR d.endDate >= '$forDateEscaped')
+      AND d.giveWhenNeeded = 0
     ORDER BY d.preferredTime
       ";
     

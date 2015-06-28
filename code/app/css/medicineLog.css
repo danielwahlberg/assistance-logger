@@ -2,6 +2,10 @@
  * 
  */
 
+.page-content {
+	margin: 1em;
+}
+
 /* Log medicines styles */
 .medicineGiven td{
 	font-style: italic;

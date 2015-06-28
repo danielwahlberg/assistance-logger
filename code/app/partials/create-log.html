@@ -8,7 +8,7 @@
         	<p>Genom att klicka på OK nedan bekräftar du att du vill spara nedanstående medicinering given av <strong>{{medicationToStore[0].givenBy}}</strong></p>
             <ul>
                 <li ng-repeat="med in medicationToStore">
-                    {{med.medicine}}, {{med.dose}}
+                    {{med.medicineName}}, {{med.dose}}
                 </li>
             </ul>
             
@@ -35,6 +35,7 @@
         	</select>
         </div>
     </div>
+    <h3>Regelbunden medicinering</h3>
 <p>
 	<form>
 		<table class="table table-striped">
@@ -50,11 +51,26 @@
 			<tr ng-repeat="medicine in medicines" ng-class="{ medicineGiven: medicine.isGiven, stateStored: medicine.givenMedicineStored}">
 				<td><input type="checkbox" name="med" ng-model="medicine.isGiven" ng-disabled="medicine.givenMedicineStored" value="{{medicine.id}}" ng-change="toggleMedicineGiven(medicine)" /></td>
 				<td>{{medicine.time}}</td>
-				<td class="medicineName">{{medicine.medicine}}</td>
+				<td class="medicineName">{{medicine.medicineName}}</td>
 				<td>{{medicine.dose}}</td>
 				<td>{{medicine.givenBy}} {{medicine.givenTime | date:short}}</td>
 			</tr>
 		</table>
+        <h3>Medicinering vid behov</h3>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default">{{getCurrentWhenNeededMedicine()}}</button>
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="medicine in whenNeededMedicines"><a ng-click="selectWhenNeededMedicine(medicine)">{{medicine.medicineName}} ({{medicine.dose}})</a></li>
+          </ul>
+        </div>        
+        <ul>
+            <li ng-repeat="logEntry in whenNeededMedicineLog">{{logEntry.medicineName}}, {{logEntry.givenBy}} {{logEntry.givenTime}}</li>
+        </ul>
+
 		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="openSaveConfirmation()">
 			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': storeComplete,'glyphicon-floppy-disk':!storeComplete}" aria-hidden="true"></span> Spara
 		</button>

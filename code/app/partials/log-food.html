@@ -1,9 +1,8 @@
-<div class="row">
+<!-- <div class="page-content"> -->
+
 	<h1>Mat</h1>
-</div>
-<div class="row">
+
 	<h3>Logga matning</h3>
-</div>
 <div class="row">
 	<div class="col-md-3">
 		<h4>Vem gav maten?</h4>
@@ -38,12 +37,12 @@
 		<!--</div>
 		<div class="col-md-4">-->
 			<span class="input-group input-group-md">
-			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="25" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
+			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="5" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
 			  <span class="input-group-addon" id="mealAmount">ml</span>
 			</span>
 		</div>
 	</div>
-	<div class="row">
+	
 		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="saveChanges()">
 			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
 		</button>
@@ -56,9 +55,9 @@
 				<li ng-repeat="error in errors">{{error}}</li>
 			</ul>
 		</div>		
-	</div>
+	
 </form>
-<div class="row">
+
 	<h3>Sparad mat/dryck {{today | date:medium}}</h3>
 		<table class="table table-striped">
 			<thead>
@@ -81,4 +80,5 @@
 				</tr>
 			</tfoot>
 		</table>
-</div>
+
+<!-- </div> --> <!-- end page-content -->
