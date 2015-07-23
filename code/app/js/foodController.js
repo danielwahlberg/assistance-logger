@@ -68,6 +68,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
       	$scope.errors = [];
       	$scope.meals.push( // Dynamically update table with stored feeding
 	      	{
+            "id" : data, // The newly created id will be returned from backend
 	      		"name" : $scope.feedingToStore.foodType.name,
 	      		"amount" : $scope.feedingToStore.amount,
 	      		"givenBy" : $scope.feedingToStore.assistant.name		
@@ -81,7 +82,29 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
     		$scope.errors.push("Fel inträffade på servern när matningen skulle sparas");
     	}
     );
-  }
+  };
+
+  $scope.deleteFeeding = function(feedingToDelete) {
+    var deletionConfirmed = confirm("Vill du ta bort matningen?");
+   if(deletionConfirmed) {
+      $http.delete('/api/v1/food/feeding/' + feedingToDelete.id)
+        .success(
+          function(data, status, headers, config) {
+            // Remove the deleted row from the table
+            var index = $scope.meals.indexOf(feedingToDelete);
+            $scope.meals.splice(index, 1);          
+
+            // Reduce the sum with the removed amount
+            $scope.sumAmount -= feedingToDelete.amount;
+          }
+        )
+        .error(
+        function(data,status,headers, config) {
+          $scope.saveErrorOccured=true;
+          $scope.errors.push("Fel inträffade på servern när matningen skulle tas bort");
+        });      
+    }    
+  };
 
 
 });

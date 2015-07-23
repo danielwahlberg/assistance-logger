@@ -159,7 +159,7 @@
 
   $app->get('/food/feeding/', function() {
     $sql = 
-      "SELECT food.name, log.amount, food.unit, log.feedingStoredAt, a.firstName as givenBy
+      "SELECT food.name, log.id, log.amount, food.unit, log.feedingStoredAt, a.firstName as givenBy
       FROM feedingLog log
       INNER JOIN foodType food ON food.id = log.foodType_id
       INNER JOIN assistant a ON a.id = log.assistant_id
@@ -184,6 +184,15 @@
       VALUES({$arrInput['amount']}, {$arrInput['foodType']['id']}, {$arrInput['assistant']['id']}, NOW())";
     $db = connect_db();
     $db->query($sql);
+    echo json_encode($db->insert_id);
+  });
+
+  $app->delete('/food/feeding/:id', function($id){
+    
+    $sql = "DELETE FROM feedingLog where id = $id";
+    $db = connect_db();
+    $db->query($sql);
+
   });
 
   $log = $app->getLog();
