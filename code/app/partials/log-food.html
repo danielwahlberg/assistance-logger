@@ -8,6 +8,7 @@
 		<h4>Vem gav maten?</h4>
 	</div>
     <div class="col-md-6">
+    	<!--
     	<div class="btn-group">
 		  <button type="button" class="btn btn-default">{{getCurrentAssistantName()}}</button>
 		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -18,11 +19,12 @@
 		    <li ng-repeat="assistant in assistants"><a ng-click="selectAssistant(assistant)">{{assistant.name}}</a></li>
 		  </ul>
 		</div>
-		<!--
-    	Loggar medicinering för    	
+		-->
+		
+    	Loggar matning för    	
     	<select ng-model="currentAssistant" ng-options="assistant as assistant.name for assistant in assistants">
     	</select>
-    	-->
+    	
     </div>
 </div>
 <form>

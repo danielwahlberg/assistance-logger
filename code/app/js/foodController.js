@@ -57,10 +57,14 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   $scope.errors = [];
 
   $scope.saveChanges = function() {
-  	if($scope.feedingToStore.assistant == null){
+  	//if($scope.feedingToStore.assistant == null){
+    if($scope.currentAssistant == null){
   		$scope.errors.push("Du måste välja assistent innan du sparar");
   		return 1;
-  	}
+  	} else {
+      $scope.feedingToStore.assistant = $scope.currentAssistant;
+    }
+    
     $http.post('/api/v1/food/feeding', $scope.feedingToStore)
     .success( 
       function(data, status, headers, config) {
