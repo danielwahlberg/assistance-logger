@@ -120,7 +120,7 @@
 
   $app->get('/assistants/', function(){
     $db = connect_db();
-    $result = $db->query( 'SELECT id, firstName AS name FROM assistant' );
+    $result = $db->query( 'SELECT id, firstName AS name FROM assistant WHERE endDate IS NULL OR endDate > NOW()' );
     while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
       $data[] = $row;
     }
