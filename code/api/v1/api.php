@@ -125,12 +125,6 @@
       $data[] = $row;
     }
     echo json_encode($data);
-    /*
-    $app->render('friends.php', array(
-        'page_title' => "Your Friends",
-        'data' => $data
-      )
-    );  */
   });
 
   $app->post('/medication/', function() use ($app){
