@@ -20,11 +20,10 @@
 		  </ul>
 		</div>
 		-->
-		
-    	Loggar matning för    	
+			
     	<select ng-model="currentAssistant" ng-options="assistant as assistant.name for assistant in assistants">
     	</select>
-    	
+
     </div>
 </div>
 <form>
@@ -44,7 +43,7 @@
 			</span>
 		</div>
 	</div>
-	
+
 		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="saveChanges()">
 			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
 		</button>
@@ -56,8 +55,8 @@
 			<ul>
 				<li ng-repeat="error in errors">{{error}}</li>
 			</ul>
-		</div>		
-	
+		</div>
+
 </form>
 
 	<h3>Sparad mat/dryck {{today | date:medium}}</h3>
