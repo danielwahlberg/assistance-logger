@@ -1,6 +1,6 @@
 
 medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
-    $scope.isActive = function (viewLocation) { 
+    $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
 });
@@ -20,17 +20,17 @@ Date.prototype.yyyymmdd = function() {
   $scope.selectedDate = new Date();
 
   $http.get('/api/v1/medicines/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
-    $scope.medicines = data    
+    $scope.medicines = data
   });
   $http.get('/api/v1/medicines/whenNeededMedicines/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
-    $scope.whenNeededMedicines = data    
-  });  
+    $scope.whenNeededMedicines = data
+  });
   $http.get('/api/v1/medicines/whenNeededLog/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
-    $scope.whenNeededMedicineLog = data    
-  });  
+    $scope.whenNeededMedicineLog = data
+  });
 
   $http.get('/api/v1/assistants').success(function(data){
-    $scope.assistants = data    
+    $scope.assistants = data
   });
 
   $scope.getCurrentWhenNeededMedicine = function() {
@@ -55,7 +55,7 @@ Date.prototype.yyyymmdd = function() {
     else
       $scope.saveDisabled = false;
     $http.get('/api/v1/medicines/'+ $scope.selectedDate.yyyymmdd()).success(function(data){
-      $scope.medicines = data    
+      $scope.medicines = data
     });
   };
 
@@ -69,7 +69,7 @@ Date.prototype.yyyymmdd = function() {
     }
 
     if(selectedMedicine.isGiven) {
-      selectedMedicine.givenBy = $scope.currentAssistant.name;  
+      selectedMedicine.givenBy = $scope.currentAssistant.name;
       selectedMedicine.givenByAssistantId = $scope.currentAssistant.id
       $scope.medicationToStore.push(selectedMedicine);
       $scope.storeComplete=false;
@@ -88,12 +88,18 @@ Date.prototype.yyyymmdd = function() {
 
   $scope.cancelSave = function () {
     $modalInstance.dismiss('cancel');
-  };  
+  };
 
   $scope.openSaveConfirmation = function (size) {
+      if($scope.currentAssistant == null) {
+        // Assistant has not been selected
+        alert('Välj assistent först');
+        return 1;
+      }
+
       if($scope.whenNeededMedicationToStore != null){
-        $scope.whenNeededMedicationToStore.givenBy = $scope.currentAssistant.name;  
-        $scope.whenNeededMedicationToStore.givenByAssistantId = $scope.currentAssistant.id        
+        $scope.whenNeededMedicationToStore.givenBy = $scope.currentAssistant.name;
+        $scope.whenNeededMedicationToStore.givenByAssistantId = $scope.currentAssistant.id
         $scope.medicationToStore.push($scope.whenNeededMedicationToStore);
       }
       var modalInstance = $modal.open({
@@ -112,14 +118,14 @@ Date.prototype.yyyymmdd = function() {
       $scope.saveChanges();
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
-    });      
+    });
   };
 
   $scope.saveChanges = function() {
-    $http.post('/api/v1/medication', $scope.medicationToStore).success( 
+    $http.post('/api/v1/medication', $scope.medicationToStore).success(
       function(data, status, headers, config) {
-        for (i = 0; i < $scope.medicines.length; i++) { 
-          for (j = 0; j < $scope.medicationToStore.length; j++) { 
+        for (i = 0; i < $scope.medicines.length; i++) {
+          for (j = 0; j < $scope.medicationToStore.length; j++) {
             if($scope.medicines[i].id == $scope.medicationToStore[j].id)
               $scope.medicines[i].givenMedicineStored = true;
           }
@@ -127,7 +133,7 @@ Date.prototype.yyyymmdd = function() {
         $scope.medicationToStore = []; // Empty array; nothing more to store
         $scope.storeComplete=true;
       });
-      
+
   }
 
 
@@ -210,7 +216,7 @@ medicineApp.controller('ViewLogListCtrl', ['$scope', '$routeParams', '$http',
         $scope.entries = data;
       }
       );
-    
+
 }]);
 
 medicineApp.controller('SaveConfirmationModalCtrl', function ($scope, $modalInstance, medicationToStore) {
@@ -235,7 +241,7 @@ medicineApp.controller('UserSelectionOpenerCtrl', function ($scope, $modal, $log
       templateUrl: 'app/partials/modal-user-selection.html',
       controller: 'UserSelectionCtrl',
       size: size
-    });  
+    });
   };
 });
 medicineApp.controller('UserSelectionCtrl', function ($scope, $modalInstance, $http) {
@@ -243,7 +249,7 @@ medicineApp.controller('UserSelectionCtrl', function ($scope, $modalInstance, $h
   $http.get('/app/data/users.json').success(function(data) {
     $scope.users = data;
   });
-  
+
 
   $scope.ok = function () {
     $modalInstance.close($scope.selected.item);
