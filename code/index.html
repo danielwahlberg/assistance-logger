@@ -21,6 +21,7 @@
     <!-- Custom Angular Controller for this Medicine App-->
   <script src="app/js/app.js"></script>
   <script src="app/js/routes.js"></script>
+  <script src="app/js/securityInterceptor.js"></script>
 	<script src="app/js/controller.js"></script>
   <script src="app/js/foodController.js"></script>
 
@@ -67,7 +68,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li ng-class="{ active: isActive('/admin')}"><a href="./">Admin</a></li>
-              <li ng-controller="UserSelectionOpenerCtrl"><a href ng-click="open()">Logga in</a></li>
+              <li ng-class="{ active: isActive('/login')}"><a href="/#/login">Logga in</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
@@ -84,7 +85,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="assets/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script> 
+    <script src="assets/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
   </body>

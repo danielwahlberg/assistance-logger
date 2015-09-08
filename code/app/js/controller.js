@@ -5,6 +5,18 @@ medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
     };
 });
 
+medicineApp.controller('LoginCtrl', function ($scope, $http) {
+  $scope.attemptLogin = function() {
+    $http.post('api/v1/login', $scope.credentials)
+      .success( function() {
+        console.log('login attempt was successful');
+      })
+      .error( function() {
+        console.log('login attempt could not be processed');
+      });
+  }
+
+});
 
 medicineApp.controller('CreateLogCtrl', function ($scope, $http, $modal, $log) {
 
@@ -225,34 +237,6 @@ medicineApp.controller('SaveConfirmationModalCtrl', function ($scope, $modalInst
 
   $scope.ok = function () {
     $modalInstance.close(); // OK
-  };
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-});
-
-// User selection controllers
-medicineApp.controller('UserSelectionOpenerCtrl', function ($scope, $modal, $log) {
-  $scope.open = function (size) {
-
-    var modalInstance = $modal.open({
-      animation: $scope.animationsEnabled,
-      templateUrl: 'app/partials/modal-user-selection.html',
-      controller: 'UserSelectionCtrl',
-      size: size
-    });
-  };
-});
-medicineApp.controller('UserSelectionCtrl', function ($scope, $modalInstance, $http) {
-
-  $http.get('/app/data/users.json').success(function(data) {
-    $scope.users = data;
-  });
-
-
-  $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
   };
 
   $scope.cancel = function () {

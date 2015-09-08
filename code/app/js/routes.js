@@ -3,7 +3,7 @@ medicineApp.config(['$routeProvider',
     $routeProvider.
       when('/start', {
         templateUrl: 'app/partials/start.html'
-      }).      
+      }).
       when('/logMedicine', {
         templateUrl: 'app/partials/create-log.html',
         controller: 'CreateLogCtrl'
@@ -19,6 +19,10 @@ medicineApp.config(['$routeProvider',
       when('/viewLog/:logId', {
         templateUrl: 'app/partials/view-log.html',
         controller: 'ViewLogCtrl'
+      }).
+      when('/login', {
+        templateUrl: 'app/partials/modal-user-selection.html',
+        controller: 'LoginCtrl'
       }).
       otherwise({
         redirectTo: '/start'

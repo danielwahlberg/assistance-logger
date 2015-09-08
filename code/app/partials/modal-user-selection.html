@@ -1,5 +1,6 @@
 <div style="margin:2em 2em">
 	<h1>Vem är du?</h1>
-	Användarnamn <input />
-	Lösenord <input type="password"/>
+	Användarnamn <input ng-model="credentials.username" />
+	Lösenord <input type="password" ng-model="credentials.password"/>
+	<input type="button" value="Logga in" ng-click="attemptLogin()" />
 </div>

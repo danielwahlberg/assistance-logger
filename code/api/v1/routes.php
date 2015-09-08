@@ -13,8 +13,8 @@
 
 
   $app->post('/login/', function () use ($app) {
-    $arrInput = $app->request->post();
-
+    $arrInput = $app->request->getBody();
+    error_log(print_r($arrInput, true));
     SecurityService::login($arrInput['username'], $arrInput['password']);
   });
 
@@ -52,7 +52,7 @@
     echo json_encode($data);
   });
 
-  $app->get('/food/feeding/', function() use ($app) {
+  $app->get('/food/feeding/', $authenticateForRole('admin'),  function() use ($app) {
       $data = $app->foodService->getLoggedFeeding();
       echo json_encode($data);
   });
