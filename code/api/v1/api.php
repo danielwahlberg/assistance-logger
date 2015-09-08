@@ -4,7 +4,9 @@
   require 'foodService.php';
   require 'medicineService.php';
   require 'assistantService.php';
+  require 'securityService.php';
 
+  session_start();
 
   \Slim\Slim::registerAutoloader();
 

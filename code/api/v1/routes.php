@@ -12,10 +12,22 @@
   });
 
 
+  $app->post('/login/', function () use ($app) {
+    $arrInput = $app->request->post();
+
+    SecurityService::login($arrInput['username'], $arrInput['password']);
+  });
+
   $app->get('/assistants/', function() use ($app){
     $data = $app->assistantService->getActiveAssistants();
     echo json_encode($data);
   });
+
+  $app->get('/medicines/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
+    $data = $app->medicineService->getMedicineList($forDate);
+    echo json_encode($data);
+  });
+
 
   $app->post('/medication/', function() use ($app){
     $arrInput = $app->request()->getBody();
@@ -32,12 +44,6 @@
    */
   $app->get('/medicines/whenNeededLog/:forDate', function($forDate) use ($app){
   	$data = $app->medicineService->getLoggedWhenNeededMedication($forDate);
-    echo json_encode($data);
-  });
-
-
-  $app->get('/medicines/:forDate', function($forDate) use ($app){
-    $data = $app->medicineService->getMedicineList($forDate);
     echo json_encode($data);
   });
 
