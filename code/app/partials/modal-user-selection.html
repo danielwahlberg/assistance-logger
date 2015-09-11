@@ -1,7 +1,38 @@
 <div style="margin:2em 2em">
 	<h1>Vem är du?</h1>
-	<div ng-if="message">{{message}}</div>
-	Användarnamn <input ng-model="credentials.username" />
-	Lösenord <input type="password" ng-model="credentials.password"/>
-	<input type="button" value="Logga in" ng-click="attemptLogin()" />
+
+	<div ng-if="showLoginRequiredMessage" class="alert alert-warning alert-dismissible" style="margin-top: 2em;" role="alert" id="authRequiredAlert">
+		Sidan du försökte visa kräver inloggning.
+	</div>
+
+	<form class="form-horizontal" ng-submit="attemptLogin()">
+			<div class="form-group">
+					<label for="inputEmail" class="control-label col-xs-2">Email</label>
+					<div class="col-xs-10">
+							<input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="credentials.username" />
+					</div>
+			</div>
+			<div class="form-group">
+					<label for="inputPassword" class="control-label col-xs-2">Lösenord</label>
+					<div class="col-xs-10">
+							<input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="credentials.password" />
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-xs-offset-2 col-xs-10">
+							<div class="checkbox">
+									<label><input type="checkbox"> Kom ihåg mig 7 dagar</label>
+							</div>
+					</div>
+			</div>
+			<div class="form-group">
+					<div class="col-xs-offset-2 col-xs-10">
+							<button type="submit" class="btn btn-primary">Login</button>
+					</div>
+			</div>
+	</form>
+
+	<div ng-if="loginFailed" class="alert alert-danger alert-dismissible" style="margin-top: 2em;" role="alert" id="loginFailedAlert">Inloggningen misslyckades</div>
+
+
 </div>

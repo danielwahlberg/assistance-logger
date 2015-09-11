@@ -17,10 +17,27 @@ medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
 });
 
 medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService, $rootScope) {
-  $rootScope.$on('not-auth-event', function(event, args){ // This stuff is not working
-    console.log("not auth even occured");
-    $scope.message = "Sidan du försöker visa kräver inloggning";
+
+  // Initialize
+  $scope.loginFailed = false;
+  $scope.showLoginRequiredMessage = true;
+
+  $rootScope.$on('not-auth-event', function(event, args){
+    console.log("Tried to access a resource that requires login");
+    $scope.showLoginRequiredMessage = true;// This stuff is not working
   });
+
+  $rootScope.$on('auth-failed', function(event, args){
+    console.log("Login failed");
+    $scope.loginFailed = true;
+    $scope.showLoginRequiredMessage = false;
+  });
+  $rootScope.$on('auth-success', function(event, args){
+    console.log("Login succeeded");
+    $scope.loginFailed = false;
+    $scope.showLoginRequiredMessage = false;
+  });
+
   $scope.attemptLogin = function() {
     AuthService.login($scope.credentials).then(function(httpResponse) {
       $scope.setCurrentUser(httpResponse.data); // Function defined in ApplicationController

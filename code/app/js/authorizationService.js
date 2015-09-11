@@ -1,4 +1,4 @@
-medicineApp.factory('AuthService', function ($http, Session) {
+medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
   var authService = {};
 
   // Attempt to login. If successful, user role and name is stored in session.
@@ -9,8 +9,10 @@ medicineApp.factory('AuthService', function ($http, Session) {
         .success( function(response) {
           if(response.loginStatus == 'OK') { // Login successful
             Session.create(response.username, response.role, response.displayName);
+            $rootScope.$broadcast('auth-success');
           } else
             console.log('login attempt failed');
+            $rootScope.$broadcast('auth-failed');
         })
         .error( function() {
           console.log('login attempt could not be processed');

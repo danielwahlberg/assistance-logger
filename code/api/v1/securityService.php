@@ -4,7 +4,7 @@
     * Slim Middleware: Check user currently logged in user has access to this resource
     * (put here just to stop Slim from complaining)
     */
-    $authenticateForRole = function ( $requiredRole = 'member' ) {
+    $authenticateForRole = function ( $requiredRole = 'patientAdmin' ) {
         return function () use ( $requiredRole) {
             $app = \Slim\Slim::getInstance();
             if(!isset($_SESSION['user'])) {
@@ -59,7 +59,7 @@
             $user = new User();
             $user->username = $row['email'];
             $user->name = $row['email'];
-            $user->role = $row['role'];
+            $user->role = strtolower($row['role']);
             $_SESSION['user'] = $user;
             $loginResult = array(
               'loginStatus' => 'OK',
@@ -82,18 +82,18 @@
 
 
       public static function isAuthorizedTo(User $user, $requiredRole) {
-        if ($user->role == null) {
-          return false;
-        } elseif ($user->role == 'admin') {
-          return true;
-        } elseif ($user->role == 'assistant') {
-          if($requiredRole == 'admin')
+        $requiredRole = strtolower($requiredRole);
+        switch($requiredRole) {
+          case 'systemadmin':
+            return $user->role == 'systemadmin';
+          case 'patientadmin':
+            return $user->role == 'systemadmin' || $user->role == 'patientadmin';
+          case 'assistant':
+            return $user->role == 'systemadmin'
+                || $user->role == 'patientadmin'
+                || $user->role == 'assistant';
+          default:
             return false;
-          else {
-            return true;
-          }
-        } else {
-          return false;
         }
       }
     }

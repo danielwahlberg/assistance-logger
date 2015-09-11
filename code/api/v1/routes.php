@@ -57,7 +57,7 @@
     echo json_encode($data);
   });
 
-  $app->get('/food/feeding/', $authenticateForRole('admin'),  function() use ($app) {
+  $app->get('/food/feeding/', $authenticateForRole('assistant'),  function() use ($app) {
       $data = $app->foodService->getLoggedFeeding();
       echo json_encode($data);
   });
