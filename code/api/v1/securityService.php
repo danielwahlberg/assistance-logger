@@ -1,6 +1,8 @@
 <?php
 
    /**
+    * Slim Middleware: Check user currently logged in user has access to this resource
+    * (put here just to stop Slim from complaining)
     */
     $authenticateForRole = function ( $requiredRole = 'member' ) {
         return function () use ( $requiredRole) {
@@ -16,7 +18,7 @@
               error_log('Not properly logged in');
               $app->response->status(401);
               return;
-            } elseif($currentUser->isAuthorizedTo($requiredRole)) {
+            } elseif(SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
               error_log('Logged in with right role');
               return;
             } else {
@@ -26,22 +28,39 @@
         };
     };
 
+    class User {
+      public $username, $name, $role;
+    }
+
+
     class SecurityService {
       public static function login($username, $password) {
         $user = new User();
+        $user->username = 'daniel@dwahlberg.se';
+        $user->name = 'Daniel';
         $user->role = 'assistant';
         $_SESSION['user'] = $user;
+        $loginResult = array(
+          'loginStatus' => 'OK',
+          'username' => $user->username,
+          'displayName' => $user->name,
+          'role' => $user->role
+        );
+        return $loginResult;
+        // TODO Implement proper login functionality
       }
-    }
 
-    class User {
-      public $name, $role;
-      public function isAuthorizedTo($requiredRole) {
-        if ($this->role == null) {
+      public static function logout() {
+        unset($_SESSION['user']);
+      }
+
+
+      public static function isAuthorizedTo(User $user, $requiredRole) {
+        if ($user->role == null) {
           return false;
-        } elseif ($this->role == 'admin') {
+        } elseif ($user->role == 'admin') {
           return true;
-        } elseif ($this->role == 'assistant') {
+        } elseif ($user->role == 'assistant') {
           if($requiredRole == 'admin')
             return false;
           else {
@@ -52,5 +71,4 @@
         }
       }
     }
-
 ?>

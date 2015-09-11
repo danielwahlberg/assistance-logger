@@ -14,9 +14,14 @@
 
   $app->post('/login/', function () use ($app) {
     $arrInput = $app->request->getBody();
-    error_log(print_r($arrInput, true));
-    SecurityService::login($arrInput['username'], $arrInput['password']);
+    $loginResult = SecurityService::login($arrInput['username'], $arrInput['password']);
+    echo json_encode($loginResult);
   });
+
+
+  $app->post('/logout/', function ()  {
+      SecurityService::logout();
+    });
 
   $app->get('/assistants/', function() use ($app){
     $data = $app->assistantService->getActiveAssistants();

@@ -6,12 +6,8 @@ medicineApp.config(function($httpProvider) {
                 return response;
              },
             'responseError': function(rejection) {
-                console.log("response error detected");
                 if (rejection.status==401) {
-                    console.log("error was 401")
-                    // Modify this part to suit your needs.
-                    // In my case I broadcast a message which is
-                    // picked up elsewhere to show the login screen.
+                    // Response from backend was 401 ("Unauthorized"); redirect to login page in case we're not already there
                     if (!rejection.config.url.endsWith('/login'))
                     {
                         $location.path('/login');

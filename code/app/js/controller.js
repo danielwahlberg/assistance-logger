@@ -1,21 +1,33 @@
+medicineApp.controller('ApplicationController', function ($scope, AuthService) {
+  $scope.currentUser = null;
+  //$scope.userRoles = USER_ROLES;
+  $scope.isAuthorized = AuthService.isAuthorized;
+
+  $scope.setCurrentUser = function (user) {
+    $scope.currentUser = user;
+  };
+});
+
 
 medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
+
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
 });
 
-medicineApp.controller('LoginCtrl', function ($scope, $http) {
+medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService) {
   $scope.attemptLogin = function() {
-    $http.post('api/v1/login', $scope.credentials)
-      .success( function() {
-        console.log('login attempt was successful');
-      })
-      .error( function() {
-        console.log('login attempt could not be processed');
-      });
+    AuthService.login($scope.credentials).then(function(httpResponse) {
+      $scope.setCurrentUser(httpResponse.data); // Function defined in ApplicationController
+    })
   }
+});
 
+medicineApp.controller('LogoutCtrl', function($scope, AuthService){
+  AuthService.logout().then(function(httpResponse){
+    $scope.setCurrentUser(null);
+  });
 });
 
 medicineApp.controller('CreateLogCtrl', function ($scope, $http, $modal, $log) {

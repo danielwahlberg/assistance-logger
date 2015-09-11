@@ -24,6 +24,10 @@ medicineApp.config(['$routeProvider',
         templateUrl: 'app/partials/modal-user-selection.html',
         controller: 'LoginCtrl'
       }).
+      when('/logout', {
+        templateUrl: 'app/partials/modal-user-selection.html',
+        controller: 'LogoutCtrl'
+      }).
       otherwise({
         redirectTo: '/start'
       });
