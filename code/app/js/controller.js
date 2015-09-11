@@ -16,7 +16,11 @@ medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
     };
 });
 
-medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService) {
+medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService, $rootScope) {
+  $rootScope.$on('not-auth-event', function(event, args){ // This stuff is not working
+    console.log("not auth even occured");
+    $scope.message = "Sidan du försöker visa kräver inloggning";
+  });
   $scope.attemptLogin = function() {
     AuthService.login($scope.credentials).then(function(httpResponse) {
       $scope.setCurrentUser(httpResponse.data); // Function defined in ApplicationController

@@ -1,4 +1,4 @@
-medicineApp.config(function($httpProvider) {
+medicineApp.config(function($httpProvider, AUTH_EVENTS) {
   var interceptor =
     function($q, $rootScope, $location) {
         return {
@@ -10,8 +10,8 @@ medicineApp.config(function($httpProvider) {
                     // Response from backend was 401 ("Unauthorized"); redirect to login page in case we're not already there
                     if (!rejection.config.url.endsWith('/login'))
                     {
+                        $rootScope.$broadcast('not-auth-event');
                         $location.path('/login');
-                        $rootScope.$broadcast('auth:loginRequired');
                     }
                 }
 

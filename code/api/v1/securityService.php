@@ -34,20 +34,46 @@
 
 
     class SecurityService {
+
+      /** Create a hash for a password for storage in database */
+      public static function getPasswordHash($password) {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        return $passwordHash;
+      }
+
       public static function login($username, $password) {
-        $user = new User();
-        $user->username = 'daniel@dwahlberg.se';
-        $user->name = 'Daniel';
-        $user->role = 'assistant';
-        $_SESSION['user'] = $user;
-        $loginResult = array(
-          'loginStatus' => 'OK',
-          'username' => $user->username,
-          'displayName' => $user->name,
-          'role' => $user->role
-        );
-        return $loginResult;
-        // TODO Implement proper login functionality
+        $db = connect_db();
+        $usernameEscaped = $db->real_escape_string($username);
+        $sql = "SELECT u.email, u.role, u.password from user u where email = '{$username}'";
+
+        $result = $db->query( $sql );
+        if($result === FALSE) { // Error occured
+          error_log($db->error);
+          return array('loginStatus'=>'ERROR');
+        }
+        if ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
+          if(!password_verify($password, $row['password'])) {
+            // Passwords mismatch
+            return array('loginStatus'=>'FAIL');
+          } else {
+            $user = new User();
+            $user->username = $row['email'];
+            $user->name = $row['email'];
+            $user->role = $row['role'];
+            $_SESSION['user'] = $user;
+            $loginResult = array(
+              'loginStatus' => 'OK',
+              'username' => $user->username,
+              'displayName' => $user->name,
+              'role' => $user->role
+            );
+          }
+          return $loginResult;
+
+        } else {
+          // No user found
+          return array('loginStatus'=>'FAIL');
+        }
       }
 
       public static function logout() {
