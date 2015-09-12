@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 .page-content {
@@ -16,4 +16,10 @@
 
 tfoot tr td {
 	font-weight: bold;
+}
+
+.loggedInAs {
+	text-align: right;
+	font-style: italic;
+	color: #ccc;
 }

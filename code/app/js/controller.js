@@ -1,5 +1,6 @@
 medicineApp.controller('ApplicationController', function ($scope, AuthService) {
-  $scope.currentUser = null;
+  $scope.currentUser = AuthService.getCurrentUser();
+  console.log('anv: ' + $scope.currentUser);
   //$scope.userRoles = USER_ROLES;
   $scope.isAuthorized = AuthService.isAuthorized;
 
@@ -16,7 +17,7 @@ medicineApp.controller('MainMenuCtrl', function ($scope, $location) {
     };
 });
 
-medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService, $rootScope) {
+medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthService, $rootScope, $location) {
 
   // Initialize
   $scope.loginFailed = false;
@@ -40,7 +41,9 @@ medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthSe
 
   $scope.attemptLogin = function() {
     AuthService.login($scope.credentials).then(function(httpResponse) {
-      $scope.setCurrentUser(httpResponse.data); // Function defined in ApplicationController
+      // Below is now made in Authservice.login -does it work?
+      //$scope.setCurrentUser(httpResponse.data); // Function defined in ApplicationController
+      $location.path("/logMedicine")
     })
   }
 });

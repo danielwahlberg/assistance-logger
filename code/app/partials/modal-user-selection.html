@@ -5,30 +5,22 @@
 		Sidan du försökte visa kräver inloggning.
 	</div>
 
-	<form class="form-horizontal" ng-submit="attemptLogin()">
+	<form ng-submit="attemptLogin()">
 			<div class="form-group">
-					<label for="inputEmail" class="control-label col-xs-2">Email</label>
-					<div class="col-xs-10">
-							<input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="credentials.username" />
+					<label for="inputEmail" >Email</label>
+					<input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="credentials.username" />
+			</div>
+			<div class="form-group">
+					<label for="inputPassword">Lösenord</label>
+					<input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="credentials.password" />
+			</div>
+			<div class="form-group">
+					<div class="checkbox">
+							<label><input type="checkbox"> Kom ihåg mig 7 dagar</label>
 					</div>
 			</div>
 			<div class="form-group">
-					<label for="inputPassword" class="control-label col-xs-2">Lösenord</label>
-					<div class="col-xs-10">
-							<input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="credentials.password" />
-					</div>
-			</div>
-			<div class="form-group">
-					<div class="col-xs-offset-2 col-xs-10">
-							<div class="checkbox">
-									<label><input type="checkbox"> Kom ihåg mig 7 dagar</label>
-							</div>
-					</div>
-			</div>
-			<div class="form-group">
-					<div class="col-xs-offset-2 col-xs-10">
-							<button type="submit" class="btn btn-primary">Login</button>
-					</div>
+					<button type="submit" class="btn btn-primary">Login</button>
 			</div>
 	</form>
 

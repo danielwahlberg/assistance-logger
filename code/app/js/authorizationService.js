@@ -31,6 +31,10 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
       authorizedRoles.indexOf(Session.userRole) !== -1);
   };
 
+  authService.getCurrentUser = function() {
+    return Session.getCurrentUser();
+  };
+
   authService.logout = function() {
     return $http
       .post('api/v1/logout')
@@ -45,10 +49,28 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
 
 
 medicineApp.service('Session', function () {
+
+  this.getCurrentUser = function () {
+    var userSerialized = window.sessionStorage.loggedInUser;
+    if(userSerialized == null)
+      return null;
+    try {
+      var user = JSON.parse(userSerialized);
+      return user;
+    } catch(e) { // Invalid serialized object stored in session
+      return null;
+    }
+
+  }
+
   this.create = function (username, role, displayName) {
-    this.username = username;
-    this.role = role;
-    this.displayName = displayName;
+    this.user = {
+      username : username,
+      role : role,
+      displayName : displayName
+    };
+
+    window.sessionStorage.loggedInUser = JSON.stringify(this.user);
   }
 
   this.destroy = function () {
