@@ -31,11 +31,15 @@
     echo json_encode($data);
   });
 
+  $app->get('/medicines/all/', $authenticateForRole('assistant'), function() use ($app){
+    $data = $app->medicineService->getAllMedicines();
+    echo json_encode($data);
+  });
+
   $app->get('/medicines/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
     $data = $app->medicineService->getMedicineList($forDate);
     echo json_encode($data);
   });
-
 
   $app->post('/medication/', function() use ($app){
     $arrInput = $app->request()->getBody();

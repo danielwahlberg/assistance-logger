@@ -1,0 +1,56 @@
+<h1>Tillgängliga mediciner</h1>
+<p>(lista mediciner, möjlighet att lägga till)</p>
+<form>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Medicin</th>
+        <th>Aktuell?</th>
+      </tr>
+    </thead>
+    <tr ng-repeat="medicine in medicines">
+      <td>{{medicine.name}}</td>
+      <td><input type="checkbox" name="med" ng-model="medicine.isActive" value="{{medicine.id}}" /></td>
+    </tr>
+    <tr>
+      <td><input type="text" name="newMedName" /></td>
+      <td><input type="button" value="Spara"/></td>
+    </tr>
+  </table>
+</form>
+
+
+<h1>Aktuella medicindoser</h1>
+<p>Nedan listas aktuella doser och klockslag för varje medicin och du har möjlighet att ändra dos/klockslag</p>
+<h2>Regelbunden medicinering</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Medicin</th>
+      <th>Dos</th>
+      <th>Klockslag</th>
+    </tr>
+  </thead>
+  <tr ng-repeat="medicine in medicineDoses">
+    <td>{{medicine.medicineName}}</td>
+    <td><input type="text" value="{{medicine.dose}}"/></td>
+    <td><input type="time" value="{{medicine.time}}"/></td>
+  </tr>
+</table>
+<button ng-click="addRowDoses()">Ny rad</button>
+
+<h2>Mediciner att ge vid behov</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Medicin</th>
+      <th>Dos</th>
+      <th>Ev. klockslag</th>
+    </tr>
+  </thead>
+  <tr ng-repeat="medicine in medicinesWhenNeeded">
+    <td>{{medicine.medicineName}}</td>
+    <td><input type="text" value="{{medicine.dose}}"/></td>
+    <td><input type="time" value="{{medicine.time}}"/></td>
+  </tr>
+</table>

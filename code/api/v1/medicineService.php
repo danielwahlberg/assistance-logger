@@ -104,6 +104,16 @@ class MedicineService{
 			return $data;
 	}
 
+	public function getAllMedicines() {
+		$sql = "SELECT id, name, isActive FROM medicine";
+		$db = connect_db();
+		$result = $db->query( $sql );
+		while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
+			$data[] = $row;
+		}
+		return $data;
+	}
+
 	public function storeMedication($arrInput) {
 		foreach ($arrInput as $currentInput) {
       $sql ="

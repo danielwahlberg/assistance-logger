@@ -6,6 +6,11 @@
   require 'assistantService.php';
   require 'securityService.php';
 
+  // server should keep session data for AT LEAST 10 hours
+  ini_set('session.gc_maxlifetime', 36000);
+
+  // each client should remember their session id for EXACTLY 10 hours
+  session_set_cookie_params(36000);
   session_start();
 
   \Slim\Slim::registerAutoloader();

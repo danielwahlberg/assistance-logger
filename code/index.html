@@ -26,6 +26,7 @@
   <script src="app/js/securityInterceptor.js"></script>
 	<script src="app/js/controller.js"></script>
   <script src="app/js/foodController.js"></script>
+  <script src="app/js/adminController.js"></script>
 
     <!-- Angular UI -->
 	<script src="assets/js/ui-bootstrap-tpls-0.13.0.js"></script>
@@ -69,7 +70,7 @@
               <li ng-class="{ active: isActive('/logFood')}"><a href="/#/logFood">Mat</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li ng-class="{ active: isActive('/admin')}"><a href="./">Admin</a></li>
+              <li ng-class="{ active: isActive('/admin')}"><a href="/#/admin/medicines">Admin</a></li>
               <li ng-if="currentUser"><a href="/#/logout">Logga ut</a></li>
               <li ng-if="!currentUser" ng-class="{ active: isActive('/login')}"><a href="/#/login">Logga in</a></li>
             </ul>
