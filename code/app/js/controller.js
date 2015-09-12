@@ -178,6 +178,8 @@ medicineApp.controller('CreateLogCtrl', function ($scope, $http, $modal, $log) {
         }
         $scope.medicationToStore = []; // Empty array; nothing more to store
         $scope.storeComplete=true;
+        $scope.whenNeededMedicineLog.push($scope.whenNeededMedicationToStore);
+        $scope.whenNeededMedicationToStore = null;
       });
 
   }

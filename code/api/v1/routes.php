@@ -18,10 +18,13 @@
     echo json_encode($loginResult);
   });
 
-
   $app->post('/logout/', function ()  {
       SecurityService::logout();
     });
+
+  $app->get('/login/generatePassword/:password', function ($password) {
+    echo SecurityService::getPasswordHash($password);
+  });
 
   $app->get('/assistants/', function() use ($app){
     $data = $app->assistantService->getActiveAssistants();
