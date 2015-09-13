@@ -26,7 +26,7 @@
     echo SecurityService::getPasswordHash($password);
   });
 
-  $app->get('/assistants/', function() use ($app){
+  $app->get('/assistants/', $authenticateForRole('assistant'), function() use ($app){
     $data = $app->assistantService->getActiveAssistants();
     echo json_encode($data);
   });
@@ -41,12 +41,12 @@
     echo json_encode($data);
   });
 
-  $app->post('/medication/', function() use ($app){
+  $app->post('/medication/',  $authenticateForRole('assistant'), function() use ($app){
     $arrInput = $app->request()->getBody();
     $app->medicineService->storeMedication($arrInput);
   });
 
-  $app->get('/medicines/whenNeededMedicines/:forDate', function($forDate) use ($app){
+  $app->get('/medicines/whenNeededMedicines/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
     $medicationList = $app->medicineService->getWhenNeededMedicationList($forDate);
     echo json_encode($medicationList);
   });
@@ -54,12 +54,12 @@
   /**
    * Retrieve logged medication given because it was needed (not given regularly)
    */
-  $app->get('/medicines/whenNeededLog/:forDate', function($forDate) use ($app){
+  $app->get('/medicines/whenNeededLog/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
   	$data = $app->medicineService->getLoggedWhenNeededMedication($forDate);
     echo json_encode($data);
   });
 
-  $app->get('/food/foodTypes/', function() use ($app){
+  $app->get('/food/foodTypes/', $authenticateForRole('assistant'), function() use ($app){
     $data = $app->foodService->getFoodTypes();
     echo json_encode($data);
   });
@@ -69,13 +69,13 @@
       echo json_encode($data);
   });
 
-  $app->post('/food/feeding/', function() use ($app){
+  $app->post('/food/feeding/', $authenticateForRole('assistant'), function() use ($app){
     $arrInput = $app->request()->getBody();
     $createdId = $app->foodService->storeFeeding($arrInput);
     echo json_encode($createdId);
   });
 
-  $app->delete('/food/feeding/:id', function($id) use ($app){
+  $app->delete('/food/feeding/:id', $authenticateForRole('assistant'), function($id) use ($app){
     $app->foodService->deleteFeeding($id);
   });
 ?>
