@@ -14,7 +14,7 @@ medicineApp.controller('ApplicationController', function ($scope, AuthService) {
      var dd  = this.getDate().toString();
      return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
     };
-  
+
 });
 
 
@@ -48,6 +48,7 @@ medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthSe
   });
 
   $scope.attemptLogin = function() {
+    console.log("Remember me? "+ $scope.credentials.rememberMe);
     AuthService.login($scope.credentials).then(function(httpResponse) {
       $location.path("/logMedicine")
     })

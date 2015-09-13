@@ -41,6 +41,42 @@
         return $passwordHash;
       }
 
+      /**
+        * Generates and stored a random session token for the given user.
+        * This token will be possible to use instead of username/password
+        * to log in as the user.
+        * @return Base64 encoded concatenation of $username : token (used as HTTP header x-session-token) or NULL if user doesn't exist
+        */
+      public static function storeSessionToken($username) {
+          $token = openssl_random_pseudo_bytes(25);
+          $sql = "UPDATE user SET token = '$token', tokenValidThrough=DATE_ADD(NOW(), INTERVAL 7 DAY) WHERE email = '$username'";
+          $db = connect_db();
+          $db->query($sql);
+          if($db->affected_rows == 0) {
+            error_log("Tried to store session token for nonexisting user $username");
+            return null;
+          }
+          return base64_encode($username .':'. $token);
+      }
+
+      /**
+       * Tries to log in using only HTTP Header x-session-token
+       * @param $tokenHttpHeader Base64 encoded username and token, as returned by "storeSessionToken"
+       * @return true if token is valid and non-expired, false otherwise
+       */
+      public static function validateSessionToken($tokenHttpHeader) {
+        $strUsernameAndToken = base64_decode($tokenHttpHeader);
+        $arrUsernameAndToken = split(':', $strUsernameAndToken);
+        $sql = "SELECT username, password FROM user WHERE token = {$arrUsernameAndToken[0]} AND tokenValidThrough > NOW()";
+        $db = connect_db();
+        $result = $db->query($sql);
+        if($row = $result->fetch_array(MYSQLI_ASSOC)) {
+          SecurityService::login($row['username'], $row['password']);
+        } else {
+          return false;
+        }
+      }
+
       public static function login($username, $password) {
         $db = connect_db();
         $usernameEscaped = $db->real_escape_string($username);
@@ -60,12 +96,14 @@
             $user->username = $row['email'];
             $user->name = $row['email'];
             $user->role = strtolower($row['role']);
+            $sessionToken = SecurityService::storeSessionToken($username);
             $_SESSION['user'] = $user;
             $loginResult = array(
               'loginStatus' => 'OK',
               'username' => $user->username,
               'displayName' => $user->name,
-              'role' => $user->role
+              'role' => $user->role,
+              'sessionToken' => $sessionToken
             );
           }
           return $loginResult;

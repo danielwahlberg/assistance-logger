@@ -2,6 +2,12 @@ medicineApp.config(function($httpProvider, AUTH_EVENTS) {
   var interceptor =
     function($q, $rootScope, $location) {
         return {
+            'request': function(config) {
+                if (true) { // TODO Use local storage to check if session token exist (to put in auth service?)
+                    config.headers['x-session-token'] = 'daniels-test-token';
+                  }
+                return config;
+            },
             'response': function(response) {
                 return response;
              },
