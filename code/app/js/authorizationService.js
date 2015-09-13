@@ -9,6 +9,8 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
         .success( function(response) {
           if(response.loginStatus == 'OK') { // Login successful
             Session.create(response.username, response.role, response.displayName);
+            if(credentials.rememberMe)
+              window.localStorage.authToken = response.sessionToken; // Store token in local storage if user has wished to be remembered
             $rootScope.$broadcast('auth-success');
           } else
             console.log('login attempt failed');
@@ -18,6 +20,11 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
           console.log('login attempt could not be processed');
         });
   };
+
+  /** Returns token stored in local storage by login function above  */
+  authService.getAuthToken = function() {
+    return window.localStorage.authToken;
+  }
 
   authService.isAuthenticated = function () {
     return !!Session.userId;
