@@ -83,7 +83,9 @@
           // Found user with the provided token in database. Log user in.
 
           $user = SecurityService::getUserFromResultRow($row);
-          $sessionToken = SecurityService::storeSessionToken($arrUsernameAndToken[0]);
+          // $sessionToken = SecurityService::storeSessionToken($arrUsernameAndToken[0]); // Why did I do this..? Won't this invalidate the local token stoed by user?!
+          $sessionToken = $arrUsernameAndToken[1];
+          
           $_SESSION['user'] = $user;
           $loginResult = array(
             'loginStatus' => 'OK',
