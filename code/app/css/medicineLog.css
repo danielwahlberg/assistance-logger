@@ -16,6 +16,7 @@
 
 tfoot tr td {
 	font-weight: bold;
+	font-size: 2em;
 }
 
 .loggedInAs {

@@ -2,7 +2,6 @@
 
 	<h1>Mat</h1>
 
-	<h3>Logga matning</h3>
 <div class="row">
 	<div class="col-md-3">
 		<h4>Vem gav maten?</h4>
@@ -39,19 +38,22 @@
 				</button>
 			</span>
 		<div name="spacer" style="height: 2em;">&nbsp;</div>
-			<span class="input-group input-group-lg">
-			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="5" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
-			  <span class="input-group-addon" id="mealAmount">ml</span>
-			</span>
+			<div class="col-md-7" style="padding-left: 0;">
+				<span class="input-group input-group-lg">
+				  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="5" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
+				  <span class="input-group-addon" id="mealAmount">ml</span>
+				</span>
+		</div>
+			<button class="btn btn-primary btn-lg" ng-disabled="saveDisabled" ng-click="saveChanges()">
+				<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
+			</button>
+			<div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!allChangesSaved}" role="alert" id="saveFailedAlert">
+				Matningen har sparats
+			</div>
 		</div>
 	</div>
+	<div name="spacer" style="height: 2em;">&nbsp;</div>
 
-		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="saveChanges()">
-			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
-		</button>
-		<div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!allChangesSaved}" role="alert" id="saveFailedAlert">
-			Matningen har sparats
-		</div>
 		<div class="alert alert-danger alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:errors.length==0}" role="alert" id="saveFailedAlert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<ul>
