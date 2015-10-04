@@ -20,7 +20,7 @@
 		  </ul>
 		</div>
 		-->
-			
+
     	<select ng-model="currentAssistant" ng-options="assistant as assistant.name for assistant in assistants">
     	</select>
 
@@ -31,13 +31,15 @@
 		<div class="col-md-3">
 			<h4>Vilken mat/dryck har givits?</h4>
 		</div>
-		<div class="col-md-3">
-			<span class="btn-group" role="group">
-			  <button type="button" class="btn" ng-class="{'btn-selected':feedingToStore.foodType==foodType, 'btn-default':feedingToStore.foodType!=foodType}" ng-repeat="foodType in foodTypes" ng-click="selectFoodType(foodType)">{{foodType.name}}</button>
+		<div class="col-md-4">
+			<span class="btn-group btn-group-lg" role="group">
+			  <button type="button" class="btn" ng-class="{'btn-selected':feedingToStore.foodType==foodType, 'btn-default':feedingToStore.foodType!=foodType}" ng-repeat="foodType in foodTypes" ng-click="selectFoodType(foodType)">
+					<span class="glyphicon {{foodType.icon}}" aria-hidden="true"></span>
+					{{foodType.name}}
+				</button>
 			</span>
-		<!--</div>
-		<div class="col-md-4">-->
-			<span class="input-group input-group-md">
+		<div name="spacer" style="height: 2em;">&nbsp;</div>
+			<span class="input-group input-group-lg">
 			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="5" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
 			  <span class="input-group-addon" id="mealAmount">ml</span>
 			</span>

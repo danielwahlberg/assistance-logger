@@ -1,7 +1,7 @@
 medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 
   $http.get('/api/v1/food/feeding').success(function(data){
-    $scope.meals = data    
+    $scope.meals = data
     $scope.sumAmount = 0;
     for(i=0; i<$scope.meals.length; i++) {
     	$scope.sumAmount += +$scope.meals[i].amount;
@@ -9,7 +9,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   });
 
   $http.get('/api/v1/assistants').success(function(data){
-    $scope.assistants = data    
+    $scope.assistants = data
   });
 
   $scope.feedingToStore = {};
@@ -18,14 +18,17 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   // TODO Get this from API instead
   $scope.foodTypes = [
 	{"name": "Mat",
+   "icon": "glyphicon-cutlery",
 	 "id": "1"
 	},
 	{"name": "Sondmat",
+   "icon": "glyphicon-baby-formula",
 	 "id": "2"
 	},
 	{"name": "Dryck",
+   "icon": "glyphicon-tint",
 	 "id": "3"
-	}	
+	}
   ];
 
   $scope.changeMade = function() {
@@ -64,9 +67,9 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   	} else {
       $scope.feedingToStore.assistant = $scope.currentAssistant;
     }
-    
+
     $http.post('/api/v1/food/feeding', $scope.feedingToStore)
-    .success( 
+    .success(
       function(data, status, headers, config) {
       	$scope.allChangesSaved = true;
       	$scope.errors = [];
@@ -75,7 +78,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
             "id" : data, // The newly created id will be returned from backend
 	      		"name" : $scope.feedingToStore.foodType.name,
 	      		"amount" : $scope.feedingToStore.amount,
-	      		"givenBy" : $scope.feedingToStore.assistant.name		
+	      		"givenBy" : $scope.feedingToStore.assistant.name
 	      	}
       	);
       	$scope.sumAmount += +$scope.feedingToStore.amount;
@@ -96,7 +99,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
           function(data, status, headers, config) {
             // Remove the deleted row from the table
             var index = $scope.meals.indexOf(feedingToDelete);
-            $scope.meals.splice(index, 1);          
+            $scope.meals.splice(index, 1);
 
             // Reduce the sum with the removed amount
             $scope.sumAmount -= feedingToDelete.amount;
@@ -106,8 +109,8 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
         function(data,status,headers, config) {
           $scope.saveErrorOccured=true;
           $scope.errors.push("Fel inträffade på servern när matningen skulle tas bort");
-        });      
-    }    
+        });
+    }
   };
 
 
