@@ -48,7 +48,7 @@
          "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingStoredAt) as feedingDate
           from feedingLog log
           inner join foodType ft ON ft.id = log.foodType_id
-          where feedingStoredAt > DATE_ADD(NOW(), INTERVAL -6 MONTH)
+          where feedingStoredAt > DATE_ADD(NOW(), INTERVAL -1 MONTH)
             AND foodType_id = $typeId
           group by foodType_id, feedingDate
           order by feedingDate, foodType_id";
