@@ -35,24 +35,42 @@
        return $data;
    }
 
-   /** Retrieves the sum of stored feeding per food type the latest month */
+   /** Retrieves the sum of stored feeding per food type the latest month
+    * @return array($feedingDate => array($feedingTypeName => $amountOfFeedingTypeThisDay))
+    */
    public function getFeedingStatistics() {
-     $sql =
-       "SELECT sum(amount), ft.name, CONCAT(year(feedingStoredAt),'-',month(feedingStoredAt),'-',day(feedingStoredAt)) as feedingDate
-        from feedingLog log
-        inner join foodType ft ON ft.id = log.foodType_id
-        where feedingStoredAt > DATE_ADD(NOW(), INTERVAL -1 MONTH)
-        group by foodType_id, feedingDate
-        order by feedingDate, foodType_id";
+     $arrFoodTypes = array('Food'=>1,'GTube'=>2, 'Liquid'=>3); // Can be retrieved from DB instead if food types would become dynamic
+     $db = connect_db();
+     $data = array(); // Will be populated with feeding date as keys, and array as value. Each date's array contain $feedingTypeName => $amountForFeedingType
 
-      $db = connect_db();
-      $result = $db->query($sql);
-      $data = array();
-      while($row = $result->fetch_array(MYSQLI_ASSOC)){
-        $data[] = $row;
-      }
+     foreach($arrFoodTypes as $typeName => $typeId) {
+       $sql =
+         "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingStoredAt) as feedingDate
+          from feedingLog log
+          inner join foodType ft ON ft.id = log.foodType_id
+          where feedingStoredAt > DATE_ADD(NOW(), INTERVAL -6 MONTH)
+            AND foodType_id = $typeId
+          group by foodType_id, feedingDate
+          order by feedingDate, foodType_id";
 
-      return $data;      
+        $result = $db->query($sql);
+
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+
+          if(!isset($data[$row['feedingDate']]))
+            $data[$row['feedingDate']] = array(); // Initiate this date's array
+
+          $data[$row['feedingDate']][$typeName] = $row['amountOfFeedingTypeThisDay'];
+        }
+    }
+
+    // Loop through resulting array to add sums
+    foreach($data as $feedingDate => $arrFeedingTypes) {
+      $data[$feedingDate]['sumAmount'] = array_sum($arrFeedingTypes);
+      $data[$feedingDate]['feedingDate'] = $feedingDate;
+    }
+
+      return $data;
    }
 
    public function storeFeeding($arrInput) {

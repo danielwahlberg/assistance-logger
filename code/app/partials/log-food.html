@@ -37,7 +37,7 @@
 					{{foodType.name}}
 				</button>
 			</span>
-		<div name="spacer" style="height: 2em;">&nbsp;</div>
+			<div name="spacer" style="height: 2em;">&nbsp;</div>
 			<span class="input-group input-group-lg">
 			  <input type="number" class="form-control" ng-model="feedingToStore.amount" placeholder="Given mängd" step="5" min="0" aria-describedby="mealAmount" ng-click="changeMade();">
 			  <span class="input-group-addon" id="mealAmount">ml</span>
@@ -45,6 +45,7 @@
 		</div>
 	</div> <!-- /row -->
 	<div class="row">
+			<div class="col-md-3">&nbsp;</div> <!-- Space to the left of save button to align it properly-->
 			<div name="spacer" style="height: 2em;">&nbsp;</div>
 			<button class="btn btn-primary btn-lg" ng-disabled="saveDisabled" ng-click="saveChanges()">
 				<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
@@ -87,5 +88,7 @@
 				</tr>
 			</tfoot>
 		</table>
+
+		<a href="/#/foodStatistics/">Sammanställning, senaste månadens matning</a>
 
 <!-- </div> --> <!-- end page-content -->

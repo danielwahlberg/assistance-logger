@@ -1,0 +1,23 @@
+<h1>Senaste månadens matning</h1>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <td>Dag</td>
+      <td>Mat</td>
+      <td>Sondmat</td>
+      <td>Dryck</td>
+      <td>Summa, ml</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="day in days">
+      <td>{{day.feedingDate}}</td>
+      <td>{{day.Food}}</td>
+      <td>{{day.GTube}}</td>
+      <td>{{day.Liquid}}</td>
+      <td class="sumColumn">{{day.sumAmount}}</td>
+    </tr>
+  </tbody>
+</table>
