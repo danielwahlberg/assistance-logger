@@ -69,6 +69,12 @@
       echo json_encode($data);
   });
 
+  $app->get('/food/feeding/statistics/', $authenticateForRole('assistant'),  function() use ($app) {
+      $data = $app->foodService->getFeedingStatistics();
+      echo json_encode($data);
+  });
+
+
   $app->post('/food/feeding/', $authenticateForRole('assistant'), function() use ($app){
     $arrInput = $app->request()->getBody();
     $createdId = $app->foodService->storeFeeding($arrInput);
