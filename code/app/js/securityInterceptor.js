@@ -5,8 +5,9 @@ medicineApp.config(function($httpProvider, AUTH_EVENTS) {
             'request': function(config) {
                 var AuthService = $injector.get('AuthService');
                 if (AuthService.getAuthToken() != null) {
+                    // Add custom HTTP header "x-session-token" to request, if a token is stored locally
                     config.headers['x-session-token'] = AuthService.getAuthToken();
-                  }
+                }
                 return config;
             },
             'response': function(response) {

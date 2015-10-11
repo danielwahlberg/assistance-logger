@@ -60,7 +60,9 @@
   });
 
   $app->post('/medicines/storeDoses', $authenticateForRole('patientAdmin'), function() use ($app) {
-    echo 'MOCKUP: done saving doses';
+    $arrInput = $app->request()->getBody();
+    $createdDoseId = $app->medicineService->storeDoseChange($arrInput);
+    echo json_encode($createdDoseId);
   });
 
   $app->get('/food/foodTypes/', $authenticateForRole('assistant'), function() use ($app){

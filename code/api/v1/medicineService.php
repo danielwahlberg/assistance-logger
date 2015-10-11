@@ -13,7 +13,7 @@ class MedicineService{
 	    $forDateEscaped = $db->real_escape_string($forDate);
 	    $sql =
 	        "SELECT
-	          d.id as id, m.name as medicineName, d.dose as dose, d.preferredTime as time
+	          d.id as doseId, m.id as medicineId, m.name as medicineName, d.dose as dose, d.preferredTime as time
 	        FROM
 	          medicine m
 	        INNER JOIN medicineDose d ON d.medicine_id = m.id
@@ -61,7 +61,7 @@ class MedicineService{
     // First SQL: Retrieve medcines and their doeses
     $sql =
     "SELECT
-      d.id as id, m.name as medicineName, d.dose as dose, d.preferredTime as time
+      d.id as doseId, m.name as medicineName, m.id as medicineId , d.dose as dose, d.preferredTime as time
     FROM
       medicine m
     INNER JOIN medicineDose d ON d.medicine_id = m.id
@@ -78,7 +78,7 @@ class MedicineService{
     $currentIdx = 0;
 
     while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
-      $arrDoseIds[$row['id']] = $currentIdx++;
+      $arrDoseIds[$row['doseId']] = $currentIdx++;
       $data[] = $row;
     }
     $strDoseIds = implode(',', array_keys($arrDoseIds));
@@ -114,15 +114,49 @@ class MedicineService{
 		return $data;
 	}
 
+
 	public function storeMedication($arrInput) {
 		foreach ($arrInput as $currentInput) {
       $sql ="
         INSERT INTO medicineUsageLog (medicineDose_id, assistant_id, medicineGiven)
-        VALUES(".$currentInput['id'].", {$currentInput['givenByAssistantId']}, NOW())
+        VALUES(".$currentInput['doseId'].", {$currentInput['givenByAssistantId']}, NOW())
       ";
       $db = connect_db();
       $db->query($sql);
     }
 	}
+
+	/**
+	 * Store change of dose
+	 */
+	 public function storeDoseChange($arrInput) {
+		 $db = connect_db();
+		 $arrCreatedDoseIds = array();
+
+		 $sqlCreateNewDose =
+			 "INSERT INTO medicineDose (medicine_id, startDate, endDate, dose, preferredTime, giveWhenNeeded)
+			 VALUES(?, NOW(), NULL, ?, ?, ?)";
+		 $stmtCreateNewDose = $db->prepare($sqlCreateNewDose);
+
+		 $sqlInactivateOldDose =
+			 "UPDATE medicineDose SET endDate = NOW() WHERE id = ? ";
+		$stmtInactivateOldDose = $db->prepare($sqlInactivateOldDose);
+
+		 foreach ($arrInput as $arrDose) {
+
+				$stmtCreateNewDose->bind_param('issi', $arrDose['medicineId'], $arrDose['dose'], $arrDose['time'], intval($arrDose['giveWhenNeeded']));
+				$stmtCreateNewDose->execute();
+				error_log($db->error);
+				$arrCreatedDoseIds[] = $db->insert_id;
+
+
+				$stmtInactivateOldDose->bind_param('i', $arrDose['doseId']);
+				$stmtInactivateOldDose->execute();
+				error_log($db->error);
+		 }
+
+		 return $arrCreatedDoseIds;
+
+	 }
 }
 ?>

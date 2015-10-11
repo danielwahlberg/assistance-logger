@@ -31,12 +31,17 @@
   </thead>
   <tr ng-repeat="medicine in medicineDoses">
     <td>{{medicine.medicineName}}</td>
-    <td><input type="text" ng-model="medicine.dose" /></td>
-    <td><input type="text" ng-model="medicine.time"/></td>
+    <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.dose" /></td>
+    <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.time"/></td>
   </tr>
  </table>
+ <!-- // Add new row; must be updated to include medicine type dropdown
  <button class="btn btn-default" ng-click="addRowDoses()">Ny rad</button>
- <button class="btn btn-primary" ng-click="saveRegularDose()">Spara dosförändringar</button>
+ -->
+ <button class="btn" ng-class="{'btn-disabled': regularDoseChangesSaved, 'btn-primary':!regularDoseChangesSaved}" ng-click="saveRegularDose()" >
+   <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': regularDoseChangesSaved, 'glyphicon-floppy-disk':!regularDoseChangesSaved}" aria-hidden="true"></span>
+   Spara dosförändringar
+ </button>
  <div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!regularDoseChangesSaved}" role="alert" id="saveCompletedInfo">
    De nya doserna har sparats
  </div>
@@ -52,8 +57,14 @@
   </thead>
   <tr ng-repeat="medicine in medicinesWhenNeeded">
     <td>{{medicine.medicineName}}</td>
-    <td><input type="text" value="{{medicine.dose}}"/></td>
-    <td><input type="time" value="{{medicine.time}}"/></td>
+    <td><input type="text" ng-change="whenNeededDoseChangeMade();" ng-model="medicine.dose"/></td>
+    <td><input type="text" ng-change="whenNeededDoseChangeMade();" ng-model="medicine.time"/></td>
   </tr>
 </table>
-<button class="btn btn-primary" ng-click="saveWhenNeededDose()">Spara</button>
+<button class="btn" ng-class="{'btn-disabled': whenNeededDoseChangesSaved, 'btn-primary':!whenNeededDoseChangesSaved}" ng-click="saveWhenNeededDose()" >
+  <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': whenNeededDoseChangesSaved, 'glyphicon-floppy-disk':!whenNeededDoseChangesSaved}" aria-hidden="true"></span>
+  Spara dosförändringar
+</button>
+<div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!whenNeededDoseChangesSaved}" role="alert" id="saveWhenNeededCompletedInfo">
+  De nya vid behov-doserna har sparats
+</div>

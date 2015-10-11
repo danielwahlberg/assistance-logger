@@ -3,14 +3,20 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     $scope.medicines = data
   });
 
+  // Retrieve medicine doses valid today
   $http.get('/api/v1/medicines/'+ new Date().yyyymmdd()).success(function(data){
     $scope.medicineDoses = data;
-    $scope.previouslyStoredMedicineDoses = angular.copy(data); // Store a copy to be able to compare with when saving (to avoid sending unaltered fields)
+
+     // Store a copy to be able to compare with when saving (to avoid sending unaltered fields; using copy as Angular passes reference otherwise)
+    $scope.previouslyStoredMedicineDoses = angular.copy(data);
   });
 
 
   $http.get('/api/v1/medicines/whenNeededMedicines/'+ new Date().yyyymmdd()).success(function(data){
     $scope.medicinesWhenNeeded = data;
+
+    // Store a copy to be able to compare with when saving (to avoid sending unaltered fields; using copy as Angular passes reference otherwise)
+   $scope.previouslyStoredWhenNeededDoses = angular.copy(data);
   });
 
   $scope.addRowDoses = function() {
@@ -22,24 +28,55 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     $scope.medicineDoses.push(medicineDose);
   };
 
-  $scope.saveRegularDose = function () {
+  $scope.regularDoseChangesSaved = false;
+  $scope.regularDoseChangeMade = function() {
+    $scope.regularDoseChangesSaved = false;
+  };
+
+  $scope.whenNeededDoseChangeMade = function() {
+    $scope.whenNeededDoseChangesSaved = false;
+  };
+
+  $scope.saveRegularDose = function() {
+    $scope.saveDose(false);
+  };
+
+  $scope.saveWhenNeededDose = function () {
+    $scope.saveDose(true);
+  };
+
+  $scope.saveDose = function (storingWhenNeededDose) {
     var medicine, storedMedicine;
     var changesToStore = new Array();
 
+    if(storingWhenNeededDose) {
+        var doses = $scope.medicinesWhenNeeded;
+        var storedDoses = $scope.previouslyStoredWhenNeededDoses;
+    } else {
+      var doses = $scope.medicineDoses;
+      var storedDoses = $scope.previouslyStoredMedicineDoses;
+    }
+
     // Loop over medicine doses to detect changes
-    for (i = 0; i < $scope.medicineDoses.length; i++) {
-      medicine = $scope.medicineDoses[i];
-      storedMedicine = $scope.previouslyStoredMedicineDoses[i];
+    for (i = 0; i < doses.length; i++) {
+      medicine = doses[i];
+      storedMedicine = storedDoses[i];
 
       if(medicine.dose != storedMedicine.dose
         || medicine.time != storedMedicine.time ) {
+          medicine.giveWhenNeeded = storingWhenNeededDose;
+          if(medicine.time=='')
+            medicine.time = null; // Avoid storing empty field as time 0:00:00
           changesToStore.push(medicine);
       }
     }
 
     $http.post('/api/v1/medicines/storeDoses', changesToStore)
       .success(function(data, status){
-        $scope.regularDoseChangesSaved = true;
+        if(storingWhenNeededDose)
+          $scope.whenNeededDoseChangesSaved = true;
+        else
+          $scope.regularDoseChangesSaved = true;
       });
   };
 });

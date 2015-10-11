@@ -76,9 +76,11 @@
    public function storeFeeding($arrInput) {
        $sql = "INSERT INTO feedingLog
          (amount, foodType_id, assistant_id, feedingStoredAt)
-         VALUES({$arrInput['amount']}, {$arrInput['foodType']['id']}, {$arrInput['assistant']['id']}, NOW())";
+         VALUES(?, ?, ?, NOW())";
        $db = connect_db();
-       $db->query($sql);
+       $stmt = $db->prepare($sql);
+       $stmt->bind_param('sii', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id']);
+       $stmt->execute();
       return $db->insert_id;
    }
 
