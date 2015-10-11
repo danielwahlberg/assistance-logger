@@ -59,6 +59,10 @@
     echo json_encode($data);
   });
 
+  $app->post('/medicines/storeDoses', $authenticateForRole('patientAdmin'), function() use ($app) {
+    echo 'MOCKUP: done saving doses';
+  });
+
   $app->get('/food/foodTypes/', $authenticateForRole('assistant'), function() use ($app){
     $data = $app->foodService->getFoodTypes();
     echo json_encode($data);
