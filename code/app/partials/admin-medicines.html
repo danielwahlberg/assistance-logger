@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tr ng-repeat="medicine in medicines">
-      <td>{{medicine.name}}</td>
+      <td>{{medicine.name}} ({{medicine.id}})</td>
       <td><input type="checkbox" name="med" ng-model="medicine.isActive" value="{{medicine.id}}" /></td>
     </tr>
   </table>
@@ -30,14 +30,18 @@
     </tr>
   </thead>
   <tr ng-repeat="medicine in medicineDoses">
-    <td>{{medicine.medicineName}}</td>
+    <td>
+      <select ng-if="medicine.isNew" ng-model="medicine" ng-options="medicineType as medicineType.name for medicineType in medicines">
+      </select>
+      {{medicine.medicineName}}
+    </td>
     <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.dose" /></td>
     <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.time"/></td>
   </tr>
- </table>
- <!-- // Add new row; must be updated to include medicine type dropdown
+</table>
+ <!-- // Add new row; must be updated to include medicine type dropdown -->
  <button class="btn btn-default" ng-click="addRowDoses()">Ny rad</button>
- -->
+
  <button class="btn" ng-class="{'btn-disabled': regularDoseChangesSaved, 'btn-primary':!regularDoseChangesSaved}" ng-click="saveRegularDose()" >
    <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': regularDoseChangesSaved, 'glyphicon-floppy-disk':!regularDoseChangesSaved}" aria-hidden="true"></span>
    Spara dosförändringar

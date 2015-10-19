@@ -19,11 +19,14 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
    $scope.previouslyStoredWhenNeededDoses = angular.copy(data);
   });
 
+  $scope.newMed = {'medicineName': 'defaultName'};
+
   $scope.addRowDoses = function() {
     var medicineDose = {
       medicineName: "",
       dose: "",
-      time: ""
+      time: "",
+      isNew: true
     };
     $scope.medicineDoses.push(medicineDose);
   };
@@ -61,6 +64,12 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     for (i = 0; i < doses.length; i++) {
       medicine = doses[i];
       storedMedicine = storedDoses[i];
+
+      if (typeof storedMedicine == 'undefined') {
+        // Found new dose; add to doses to store and continue to next line
+        changesToStore.push(medicine);
+        continue;
+      }
 
       if(medicine.dose != storedMedicine.dose
         || medicine.time != storedMedicine.time ) {
