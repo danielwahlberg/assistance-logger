@@ -1,0 +1,50 @@
+<h1>Händelser</h1>
+
+<h2>Logga händelse</h2>
+
+<form ng-submit="saveEvent()">
+    <div class="form-group">
+        <label for="inputEmail">Assistent*</label>
+        <select ng-model="eventToStore.assistant" ng-options="assistant as assistant.name for assistant in assistants">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="inputEventType">Typ av händelse*</label>
+        <select id="inputEventType" ng-model="eventToStore.eventType" ng-options="eventType as eventType.name for eventType in eventTypes">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="inputDuration">Hur länge pågick händelsen?</label>
+        <input type="text" class="form-control" id="inputDuration" placeholder="Tid" ng-model="eventToStore.duration" />
+    </div>
+    <div class="form-group">
+        <label for="inputDescription">Ev. beskrivning</label>
+        <input type="text" class="form-control" id="inputDescription" placeholder="Beskrivning" ng-model="eventToStore.description" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Spara</button>
+    </div>
+    <div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!saveEventSuccessful}" role="alert" id="saveCompletedInfo">
+      Händelsen har sparats
+    </div>
+    <div class="alert alert-danger alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:errors.length==0}" role="alert" id="saveFailedAlert">
+      Fel inträffade när händelsen skulle sparas.
+    </div>
+</form>
+
+<table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Händelse</th>
+        <th>Längd</th>
+        <th>Kommentar</th>
+      </tr>
+    </thead>
+    <tr ng-repeat="event in events">
+      <td>{{event.eventTypeName}}</td>
+      <td>{{event.duration}}</td>
+      <td>{{event.description}}</td>
+    </tr>
+  </table>
