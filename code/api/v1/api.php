@@ -4,6 +4,7 @@
   require 'foodService.php';
   require 'medicineService.php';
   require 'assistantService.php';
+  require 'eventService.php';
   require 'securityService.php';
 
   // server should keep session data for AT LEAST 10 hours

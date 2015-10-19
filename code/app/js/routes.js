@@ -12,6 +12,10 @@ medicineApp.config(['$routeProvider',
         templateUrl: 'app/partials/log-food.html',
         controller: 'FoodCtrl'
       }).
+      when('/logEvent', {
+        templateUrl: 'app/partials/log-event.html',
+        controller: 'EventCtrl'
+      }).
       when('/foodStatistics', {
         templateUrl: 'app/partials/food-statistics.html',
         controller: 'FoodStatisticsCtrl'

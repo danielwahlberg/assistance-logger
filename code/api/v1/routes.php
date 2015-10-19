@@ -6,12 +6,16 @@
   $app->foodService = new FoodService();
   $app->medicineService = new MedicineService();
   $app->assistantService = new AssistantService();
+  $app->eventService = new EventService();
 
   $app->get('/hello/:name', function ($name) {
       echo "Hello, $name";
   });
 
 
+  //
+  // Security
+  //
   $app->post('/login/', function () use ($app) {
     $arrInput = $app->request->getBody();
     $loginResult = SecurityService::login($arrInput['username'], $arrInput['password']);
@@ -25,6 +29,10 @@
   $app->get('/login/generatePassword/:password', function ($password) {
     echo SecurityService::getPasswordHash($password);
   });
+
+  //
+  // Medication and assistant
+  //
 
   $app->get('/assistants/', $authenticateForRole('assistant'), function() use ($app){
     $data = $app->assistantService->getActiveAssistants();
@@ -51,9 +59,7 @@
     echo json_encode($medicationList);
   });
 
-  /**
-   * Retrieve logged medication given because it was needed (not given regularly)
-   */
+  /** Retrieve logged medication given because it was needed (not given regularly) */
   $app->get('/medicines/whenNeededLog/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
   	$data = $app->medicineService->getLoggedWhenNeededMedication($forDate);
     echo json_encode($data);
@@ -65,6 +71,10 @@
     echo json_encode($createdDoseId);
   });
 
+
+  //
+  // Food
+  //
   $app->get('/food/foodTypes/', $authenticateForRole('assistant'), function() use ($app){
     $data = $app->foodService->getFoodTypes();
     echo json_encode($data);
@@ -80,7 +90,6 @@
       echo json_encode($data);
   });
 
-
   $app->post('/food/feeding/', $authenticateForRole('assistant'), function() use ($app){
     $arrInput = $app->request()->getBody();
     $createdId = $app->foodService->storeFeeding($arrInput);
@@ -90,4 +99,24 @@
   $app->delete('/food/feeding/:id', $authenticateForRole('assistant'), function($id) use ($app){
     $app->foodService->deleteFeeding($id);
   });
+
+  //
+  // Events
+  //
+  $app->get('/event/:forDate', $authenticateForRole('assistant'), function($givenDate) use ($app){
+  	$data = $app->eventService->getEventsFor($givenDate);
+    echo json_encode($data);
+  });
+
+  $app->post('/event/', $authenticateForRole('assistant'), function() use ($app){
+    $arrInput = $app->request()->getBody();
+  	$createdId = $app->eventService->storeEvent($arrInput);
+    echo json_encode($createdId);
+  });
+
+  $app->get('/event/types/', $authenticateForRole('assistant'), function() use ($app){
+  	$data = $app->eventService->getEventTypes();
+    echo json_encode($data);
+  });
+
 ?>
