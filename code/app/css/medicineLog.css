@@ -30,3 +30,8 @@ tfoot tr td {
 	font-style: italic;
 	color: #ccc;
 }
+
+.description {
+	font-style: italic;
+	color: #444;
+}

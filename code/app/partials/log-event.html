@@ -12,6 +12,7 @@
         <label for="inputEventType">Typ av händelse*</label>
         <select id="inputEventType" ng-model="eventToStore.eventType" ng-options="eventType as eventType.name for eventType in eventTypes">
         </select>
+        <p class="description">{{eventToStore.eventType.description}}</p>
     </div>
     <div class="form-group">
         <label for="inputDuration">Hur länge pågick händelsen?</label>
