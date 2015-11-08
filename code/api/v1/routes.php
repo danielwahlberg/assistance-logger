@@ -109,8 +109,23 @@
   });
 
   $app->post('/event/', $authenticateForRole('assistant'), function() use ($app){
-    $arrInput = $app->request()->getBody();
+    $arrInput = $app->request()->getBody(); // Note temporary simple function below which use the same $arrInput structure
   	$createdId = $app->eventService->storeEvent($arrInput);
+    echo json_encode($createdId);
+  });
+
+  /** Temporary, unsecured, service for registering a hard coded event */
+  $app->post('/event/createHardCoded', function() use ($app){
+    // Hard code input, to use from embryo event registerer app
+
+    $arrInput =
+      array(
+        'eventType' => array('id'=>2), // Large epilepsy seizure
+        'assistant' => array('id'=>13), // "Assistant at home"
+        'duration' => null,
+        'description' => 'Anfall registrerat med knapptryckning'
+      );
+    $createdId = $app->eventService->storeEvent($arrInput);
     echo json_encode($createdId);
   });
 

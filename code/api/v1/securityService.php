@@ -17,21 +17,24 @@
               if(!$tokenLoginSuccessful) {
                 error_log('Not logged in at all');
                 $app->response->status(401);
-              } else {
+              } elseif(SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
                 error_log('Token validation successful ');
+              } else {
+                error_log("Token validation successful, but user has not sufficient authorization ($requiredRole needed, $currentUser->role found)");
+                $app->response->status(401);
               }
-                return;
+
+              return;
             }
 
             $currentUser = $_SESSION['user'];
             if($currentUser === NULL || !$currentUser instanceof User) {
               $app->response->status(401);
-              return;
-            } elseif(SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
-              return;
-            } else {
+            } elseif(!SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
               error_log('Logged in with wrong role, '. $requiredRole .' needed, found '. $currentUser->role);
               $app->response->status(401);
+            } else {
+              // Do nothing, user has sufficient authorization
             }
         };
     };
@@ -85,7 +88,7 @@
           $user = SecurityService::getUserFromResultRow($row);
           // $sessionToken = SecurityService::storeSessionToken($arrUsernameAndToken[0]); // Why did I do this..? Won't this invalidate the local token stoed by user?!
           $sessionToken = $arrUsernameAndToken[1];
-          
+
           $_SESSION['user'] = $user;
           $loginResult = array(
             'loginStatus' => 'OK',
