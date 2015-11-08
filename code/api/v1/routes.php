@@ -117,7 +117,7 @@
   /** Temporary, unsecured, service for registering a hard coded event */
   $app->post('/event/createHardCoded', function() use ($app){
     // Hard code input, to use from embryo event registerer app
-
+ 
     $arrInput =
       array(
         'eventType' => array('id'=>2), // Large epilepsy seizure
