@@ -31,9 +31,9 @@
   </thead>
   <tr ng-repeat="medicine in medicineDoses">
     <td>
-      <select ng-if="medicine.isNew" ng-model="medicine" ng-options="medicineType as medicineType.name for medicineType in medicines">
+      <select ng-if="medicine.isNew" ng-change="medicineForNewDoseSelected(this)" ng-model="medicine" ng-options="medicineType as medicineType.name for medicineType in medicines">
       </select>
-      {{medicine.medicineName}}
+      <span ng-if="!medicine.isNew">{{medicine.medicineName}}</span>
     </td>
     <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.dose" /></td>
     <td><input type="text" ng-change="regularDoseChangeMade();" ng-model="medicine.time"/></td>

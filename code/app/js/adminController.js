@@ -19,8 +19,6 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
    $scope.previouslyStoredWhenNeededDoses = angular.copy(data);
   });
 
-  $scope.newMed = {'medicineName': 'defaultName'};
-
   $scope.addRowDoses = function() {
     var medicineDose = {
       medicineName: "",
@@ -30,6 +28,15 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     };
     $scope.medicineDoses.push(medicineDose);
   };
+
+  /** User added new row to dose list and selected a medicine; add selection to model */
+  $scope.medicineForNewDoseSelected = function(selectionMade) {
+    // TODO We presume it is the last row that is being edited; if several rows are added, this won't work for all of them
+    var lastMedicineDose = $scope.medicineDoses[$scope.medicineDoses.length-1];
+    lastMedicineDose.medicineId = selectionMade.medicine.id;
+    lastMedicineDose.medicineName = selectionMade.medicine.name;
+    lastMedicineDose.giveWhenNeeded = false;
+  }
 
   $scope.regularDoseChangesSaved = false;
   $scope.regularDoseChangeMade = function() {
