@@ -54,6 +54,15 @@
     $app->medicineService->storeMedication($arrInput);
   });
 
+  $app->post('/medicines',  $authenticateForRole('patientAdmin'), function() use ($app){
+    $arrInput = $app->request()->getBody();
+    $app->medicineService->storeMedicines($arrInput);
+  });
+
+  $app->delete('/medicines/:medicineId',  $authenticateForRole('patientAdmin'), function($medicineId) use ($app){
+    $app->medicineService->inactivateMedicine($medicineId);
+  });
+
   $app->get('/medicines/whenNeededMedicines/:forDate', $authenticateForRole('assistant'), function($forDate) use ($app){
     $medicationList = $app->medicineService->getWhenNeededMedicationList($forDate);
     echo json_encode($medicationList);
@@ -117,7 +126,7 @@
   /** Temporary, unsecured, service for registering a hard coded event */
   $app->post('/event/createHardCoded', function() use ($app){
     // Hard code input, to use from embryo event registerer app
- 
+
     $arrInput =
       array(
         'eventType' => array('id'=>2), // Large epilepsy seizure

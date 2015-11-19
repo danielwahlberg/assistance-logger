@@ -1,4 +1,5 @@
 medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
+
   $http.get('/api/v1/medicines/all/').success(function(data){
     $scope.medicines = data
   });
@@ -28,6 +29,24 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     };
     $scope.medicineDoses.push(medicineDose);
   };
+
+  $scope.addRowMedicines = function() {
+    var medicine = {
+      id: 0,
+      name: "",
+      isNew: true
+    };
+    $scope.medicines.push(medicine);
+  }
+
+  $scope.inactivateMedicine = function(medicine) {
+    if(confirm('Vill du ta bort '+ medicine.name + '?')) {
+      $http.delete('/api/v1/medicines/' + medicine.id)
+        .success(function() {
+          alert('removal done!');
+        });
+    }
+  }
 
   /** User added new row to dose list and selected a medicine; add selection to model */
   $scope.medicineForNewDoseSelected = function(selectionMade) {

@@ -115,6 +115,7 @@ class MedicineService{
 	}
 
 
+	/** Stores used medicine in medicine usage log */
 	public function storeMedication($arrInput) {
 		foreach ($arrInput as $currentInput) {
       $sql ="
@@ -124,6 +125,24 @@ class MedicineService{
       $db = connect_db();
       $db->query($sql);
     }
+	}
+
+	public function inactivateMedicine($medicineId) {
+		$sql = 'UPDATE medicine SET isActive = 0 WHERE id = '. intval($medicineId);
+		$db = connect_db();
+		$db->query($sql);
+	}
+
+	/** Stores changes in medicines */
+	public function storeMedicines($arrInput) {
+		foreach ($arrInput as $currentInput) {
+      $sql = "
+        REPLACE INTO medicine (id, name, isActive)
+        VALUES(". $currentInput['medicine'].", {$currentInput['name']}, 1)
+      ";
+      $db = connect_db();
+      $db->query($sql);
+		}
 	}
 
 	/**
