@@ -28,6 +28,7 @@
             }
 
             $currentUser = $_SESSION['user'];
+            $app->currentUser = $currentUser; // TODO Handle token login cases
             if($currentUser === NULL || !$currentUser instanceof User) {
               $app->response->status(401);
             } elseif(!SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
@@ -40,7 +41,7 @@
     };
 
     class User {
-      public $username, $name, $role;
+      public $username, $name, $role, $patientId;
     }
 
 
@@ -107,7 +108,7 @@
       public static function login($username, $password) {
         $db = connect_db();
         $usernameEscaped = $db->real_escape_string($username);
-        $sql = "SELECT u.email, u.role, u.password from user u where email = '{$username}'";
+        $sql = "SELECT u.email, u.role, u.password, u.patient_id from user u where email = '{$username}'";
 
         $result = $db->query( $sql );
         if($result === FALSE) { // Error occured
@@ -149,6 +150,7 @@
         $user->username = $row['email'];
         $user->name = $row['email'];
         $user->role = strtolower($row['role']);
+        $user->patientId = $row['patient_id'];
         return $user;
       }
 

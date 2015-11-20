@@ -5,10 +5,12 @@
  */
 
 class MedicineService{
+
 	/**
 	 * Get list of medicines and doses which are active at the given date
 	 */
 	public function getWhenNeededMedicationList($forDate) {
+		 $app = \Slim\Slim::getInstance();
 	   $db = connect_db();
 	    $forDateEscaped = $db->real_escape_string($forDate);
 	    $sql =
@@ -20,6 +22,7 @@ class MedicineService{
 	        WHERE d.startDate <= '$forDateEscaped'
 	          AND (d.endDate IS NULL OR d.endDate >= '$forDateEscaped')
 	          AND d.giveWhenNeeded = 1
+						AND d.patient_id = {$app->currentUser->patientId}
 	        ORDER BY d.preferredTime
 	          ";
 
@@ -34,6 +37,7 @@ class MedicineService{
      * Retrieve logged medication given because it was needed (not given regularly)
      */
 	public function getLoggedWhenNeededMedication($forDate){
+			$app = \Slim\Slim::getInstance();
 	    $db = connect_db();
 	    $forDateEscaped = $db->real_escape_string($forDate);
 			$data = array();
@@ -45,6 +49,7 @@ class MedicineService{
 	      INNER JOIN medicine m ON d.medicine_id = m.id
 	      WHERE d.giveWhenNeeded = 1
 	        AND DATE(log.medicineGiven) = '$forDateEscaped'
+					AND d.patient_id = {$app->currentUser->patientId}
 	          ";
 
 	    $result = $db->query( $sql );
@@ -55,6 +60,7 @@ class MedicineService{
 	}
 
 	public function getMedicineList($forDate) {
+		$app = \Slim\Slim::getInstance();
 		$db = connect_db();
     $forDateEscaped = $db->real_escape_string($forDate);
 
@@ -68,6 +74,7 @@ class MedicineService{
     WHERE d.startDate <= '$forDateEscaped'
       AND (d.endDate IS NULL OR d.endDate >= '$forDateEscaped')
       AND d.giveWhenNeeded = 0
+			AND d.patient_id = {$app->currentUser->patientId}
     ORDER BY d.preferredTime
       ";
 
@@ -91,6 +98,7 @@ class MedicineService{
       WHERE medicineDose_id IN($strDoseIds)
         AND DATE(log.medicineGiven) = '$forDateEscaped'
     ";
+
     $db = connect_db();
     $result = $db->query( $sql );
 
@@ -105,7 +113,12 @@ class MedicineService{
 	}
 
 	public function getAllMedicines() {
-		$sql = "SELECT id, name, isActive FROM medicine";
+		$app = \Slim\Slim::getInstance();
+
+		$sql = "SELECT m.id, m.name, m.isActive
+			FROM medicine m
+			INNER JOIN patient_has_medicine has_med ON m.id = has_med.medicine_id
+			WHERE has_med.patient_id = {$app->currentUser->patientId}";
 		$db = connect_db();
 		$result = $db->query( $sql );
 		while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
@@ -117,6 +130,7 @@ class MedicineService{
 
 	/** Stores used medicine in medicine usage log */
 	public function storeMedication($arrInput) {
+		$app = \Slim\Slim::getInstance();
 		foreach ($arrInput as $currentInput) {
       $sql ="
         INSERT INTO medicineUsageLog (medicineDose_id, assistant_id, medicineGiven)
@@ -128,20 +142,30 @@ class MedicineService{
 	}
 
 	public function inactivateMedicine($medicineId) {
-		$sql = 'UPDATE medicine SET isActive = 0 WHERE id = '. intval($medicineId);
+		$app = \Slim\Slim::getInstance();
+
+		// $sql = 'UPDATE medicine SET isActive = 0 WHERE id = '. intval($medicineId);
+		$sql = "DELETE FROM patient_has_medicine WHERE medicine_id = {$medicineId} AND patient_id = {$app->currentUser->patientId}";
 		$db = connect_db();
 		$db->query($sql);
 	}
 
 	/** Stores changes in medicines */
 	public function storeMedicines($arrInput) {
+		$db = connect_db();
+		$app = \Slim\Slim::getInstance();
+
 		foreach ($arrInput as $currentInput) {
       $sql = "
         REPLACE INTO medicine (id, name, isActive)
         VALUES(". $currentInput['medicine'].", {$currentInput['name']}, 1)
       ";
-      $db = connect_db();
-      $db->query($sql);
+      $sqlPatientMapping = "
+				REPLACE INTO patient_has_medicine (medicine_id, patient_id)
+				VALUES({$currentInput['medicine']}, {{$app->currentUser->patientId}})
+			";
+      $db->query($sql); // Store medicine name
+			$db->query($sqlPatientMapping); // Store mapping of new medicine to patient
 		}
 	}
 
@@ -149,12 +173,13 @@ class MedicineService{
 	 * Store change of dose
 	 */
 	 public function storeDoseChange($arrInput) {
+		 $app = \Slim\Slim::getInstance();
 		 $db = connect_db();
 		 $arrCreatedDoseIds = array();
 
 		 $sqlCreateNewDose =
-			 "INSERT INTO medicineDose (medicine_id, startDate, endDate, dose, preferredTime, giveWhenNeeded)
-			 VALUES(?, NOW(), NULL, ?, ?, ?)";
+			 "INSERT INTO medicineDose (medicine_id, startDate, endDate, dose, preferredTime, giveWhenNeeded, patient_id)
+			 VALUES(?, NOW(), NULL, ?, ?, ?, ?)";
 		 $stmtCreateNewDose = $db->prepare($sqlCreateNewDose);
 
 		 $sqlInactivateOldDose =
@@ -163,7 +188,7 @@ class MedicineService{
 
 		 foreach ($arrInput as $arrDose) {
 
-				$stmtCreateNewDose->bind_param('issi', $arrDose['medicineId'], $arrDose['dose'], $arrDose['time'], intval($arrDose['giveWhenNeeded']));
+				$stmtCreateNewDose->bind_param('issii', $arrDose['medicineId'], $arrDose['dose'], $arrDose['time'], intval($arrDose['giveWhenNeeded']), $app->currentUser->patientId);
 				$stmtCreateNewDose->execute();
 				error_log($db->error);
 				$arrCreatedDoseIds[] = $db->insert_id;
