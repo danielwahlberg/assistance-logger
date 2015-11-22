@@ -32,12 +32,16 @@ medicineApp.config(['$routeProvider',
         templateUrl: 'app/partials/admin-medicines.html',
         controller: 'AdminMainCtrl'
       }).
+      when('/sign-up', {
+        templateUrl: 'app/partials/register-user.html',
+        controller: 'SignUpCtrl'
+      }).
       when('/login', {
-        templateUrl: 'app/partials/modal-user-selection.html',
+        templateUrl: 'app/partials/login.html',
         controller: 'LoginCtrl'
       }).
       when('/logout', {
-        templateUrl: 'app/partials/modal-user-selection.html',
+        templateUrl: 'app/partials/login.html',
         controller: 'LogoutCtrl'
       }).
       otherwise({

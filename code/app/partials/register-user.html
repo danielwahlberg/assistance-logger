@@ -1,0 +1,63 @@
+
+
+<h1>Registrera användare</h1>
+
+<p>
+Välkommen som användare av assistansloggen!
+Först ett par saker att tänka på innan du registrerar dig eller matar in några uppgifter; vi kan kalla det "villkor":
+</p>
+<ul>
+  <li>Den här tjänsten drivs helt ideellt; även om jag gör mitt bästa finns det inga garantier att den alltid kommer att fungera, att inmatade uppgifter bara visas för rätt användare, att hittade fel kommer att lösas eller att data inte försvinner</li>
+  <li>Information (förutom lösenord) sparas okrypterat och kan läsas av serveradministratörer</li>
+  <li>Hjälp gärna till med utvecklingen via <a href="https://github.com/danielwahlberg/assistance-logger">GitHub</a></li>
+  <li>Om du hittar fel, <a href="https://github.com/danielwahlberg/assistance-logger/issues">registrera dem här</a></li>
+</ul>
+
+<form ng-submit="registerUser()" name="signupForm">
+    <div class="form-group" ng-class="{ 'has-error' : signupForm.email.$invalid && !signupForm.email.$pristine }">
+        <label for="inputEmail" >Email</label>
+        <input type="email" class="form-control" name="email" id="inputEmail" placeholder="Email" ng-model="userToRegister.email" required />
+        <p ng-show="signupForm.email.$invalid && !signupForm.email.$pristine" class="help-block">Giltig e-postadress är obligatorisk för registrering</p>
+    </div>
+    <div class="form-group"  ng-class="{ 'has-error' : signupForm.newPassword.$invalid && !signupForm.newPassword.$pristine }">
+        <label for="inputPassword">Lösenord</label>
+        <input type="password" class="form-control" name="newPassword" id="inputPassword" placeholder="Password" ng-model="userToRegister.newPassword" ng-minlength="8" />
+        <p ng-show="signupForm.newPassword.$error.minlength" class="help-block">
+          Lösenord måste innehålla minst åtta tecken
+        </p>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : signupForm.newPassword.$viewValue != signupForm.repeatPassword.$viewValue && !signupForm.repeatPassword.$pristine}">
+        <label for="repeatPassword">Upprepa lösenord</label>
+        <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" placeholder="Password" ng-model="userToRegister.repeatPassword" />
+        <p ng-show="signupForm.newPassword.$viewValue != signupForm.repeatPassword.$viewValue && !signupForm.repeatPassword.$pristine" class="help-block">
+          Lösenorden är inte lika
+        </p>
+    </div>
+    <div class="form-group">
+        <label for="inputPatientName">Namn på brukare</label>
+        <input type="text" class="form-control" id="inputPatientName" placeholder="Brukare" ng-model="userToRegister.patientName" />
+        <p class="description">Om du anger ett namn ovan skapas en ny brukare med angivet namn vid registreringen</p>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label><input type="checkbox" ng-model="userToRegister.termsAccepted" required>Jag accepterar villkoren för tjänsten ovan</label>
+        </div>
+    </div>
+    <!--
+    <div class="form-group">
+      <div class="g-recaptcha" data-sitekey="6LdMhBETAAAAAJjBKOpqnnGdvVpyqTyjAg1l0xFa"></div>
+    </div>
+    -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-disabled="signupForm.$invalid">Skapa konto</button>
+    </div>
+    <div class="alert alert-danger alert-dismissible" style="margin-top: 2em;" ng-show="signupForm.$submitted && signUpSuccessful" role="alert" id="passwordValidationFailedAlert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      Registreringen slutförd! Du kan nu logga in via menyalternativet "Logga in"
+    </div>
+    <div class="alert alert-danger alert-dismissible" style="margin-top: 2em;" ng-show="signupForm.$submitted && !signUpSuccessful" role="alert" id="passwordValidationFailedAlert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      Något gick fel när ditt konto skulle skapas. Försök igen senare.
+    </div>
+</form>

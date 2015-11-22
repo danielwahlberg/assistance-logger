@@ -30,6 +30,13 @@
     echo SecurityService::getPasswordHash($password);
   });
 
+  $app->post('/sign-up/', function () use ($app) {
+    $arrInput = $app->request->getBody();
+    $security = new SecurityService();
+    $signupResult = $security->signUp($arrInput);
+    echo json_encode($signupResult);
+  });
+
   //
   // Medication and assistant
   //
