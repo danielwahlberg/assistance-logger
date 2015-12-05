@@ -170,7 +170,7 @@
             return false;
         }
       }
-
+/*
       public function signUp($arrUserInfo) {
 
         $strRole;
@@ -178,7 +178,7 @@
 
         if(isset($arrUserInfo['patientName']) && $arrUserInfo['patientName'] != '') {
           // Patient name provided; create a new patient which the signed up user becomes admin for
-          $sqlPatient = "INSERT INTO patient (name) VALUES({$db->real_escape_string($arrUserInfo['patientName'])})";
+          $sqlPatient = "INSERT INTO patient (name) VALUES('".$db->real_escape_string($arrUserInfo['patientName'])."')";
           if($db->query($sqlPatient) === true) {
             $patientId = $db->insert_id();
             $strRole = 'PATIENTADMIN';
@@ -192,7 +192,7 @@
         }
 
 
-        $sqlUser = "INSERT INTO user (email, password, role, patient_id) VALUES('{$db->real_escape_string($arrUserInfo['email'])}','". SecurityService::getPasswordHash($arrUserInfo['newPassword']) ."','{$strRole}',{$patientId})";
+        $sqlUser = "INSERT INTO user (email, password, role, patient_id) VALUES('".$db->real_escape_string($arrUserInfo['email'])."','". SecurityService::getPasswordHash($arrUserInfo['newPassword']) ."','{$strRole}',{$patientId})";
 
         if($db->query($sqlUser) === true)
           $intUserId = $db->insert_id(); // Retrieve inserted ID if query was successful
@@ -201,6 +201,6 @@
           'patient_id' => $intPatientId,
           'user_id' => $intUserId
         );
-      }
+      }/**/
     }
 ?>

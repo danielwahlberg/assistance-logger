@@ -30,11 +30,22 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     $scope.medicineDoses.push(medicineDose);
   };
 
+  $scope.addRowWhenNeededDoses = function() {
+    var medicineDose = {
+      medicineName: "",
+      dose: "",
+      time: "",
+      isNew: true
+    };
+    $scope.medicinesWhenNeeded.push(medicineDose);
+  };
+
   $scope.addRowMedicines = function() {
     var medicine = {
       id: 0,
       name: "",
-      isNew: true
+      isNew: true,
+      isActive: 1
     };
     $scope.medicines.push(medicine);
   }
@@ -52,6 +63,15 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
   $scope.medicineForNewDoseSelected = function(selectionMade) {
     // TODO We presume it is the last row that is being edited; if several rows are added, this won't work for all of them
     var lastMedicineDose = $scope.medicineDoses[$scope.medicineDoses.length-1];
+    lastMedicineDose.medicineId = selectionMade.medicine.id;
+    lastMedicineDose.medicineName = selectionMade.medicine.name;
+    lastMedicineDose.giveWhenNeeded = false;
+  }
+
+  /** User added new row to "when needed" dose list and selected a medicine; add selection to model */
+  $scope.medicineForNewWhenNeededDoseSelected = function(selectionMade) {
+    // TODO We presume it is the last row that is being edited; if several rows are added, this won't work for all of them
+    var lastMedicineDose = $scope.medicinesWhenNeeded[$scope.medicineDoses.length-1];
     lastMedicineDose.medicineId = selectionMade.medicine.id;
     lastMedicineDose.medicineName = selectionMade.medicine.name;
     lastMedicineDose.giveWhenNeeded = false;

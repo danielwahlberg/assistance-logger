@@ -10,8 +10,9 @@
 .medicineGiven td{
 	font-style: italic;
 }
-.stateStored td.medicineName{
-	text-decoration: line-through;
+.stateStored td{
+	/*text-decoration: line-through;*/
+	color: #ccc;
 }
 
 thead tr td {

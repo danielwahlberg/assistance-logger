@@ -11,17 +11,17 @@
                     {{med.medicineName}}, {{med.dose}}
                 </li>
             </ul>
-            
+
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-warning" ng-click="cancel()">Avbryt</button>
         </div>
     </script>
-    
+
     <div class="row">
     	<div class="col-md-4"><h4>Visa medicinlista för</h4></div>
-        <div class="col-md-4">
+        <div class="col-md-4" ng-controller="DatePickerController">
             <p class="input-group">
               <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="dt" is-open="opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" show-button-bar="false" ng-change="dateChanged();" />
               <span class="input-group-btn">
@@ -48,7 +48,7 @@
 					<th>Given av</th>
 				</tr>
 			</thead>
-			<tr ng-repeat="medicine in medicines" ng-class="{ medicineGiven: medicine.isGiven, stateStored: medicine.givenMedicineStored}">
+			<tr ng-repeat="medicine in medicines" ng-class="{medicineGiven: medicine.isGiven, stateStored: medicine.givenMedicineStored}">
 				<td><input type="checkbox" name="med" ng-model="medicine.isGiven" ng-disabled="medicine.givenMedicineStored" value="{{medicine.id}}" ng-change="toggleMedicineGiven(medicine)" /></td>
 				<td>{{medicine.time}}</td>
 				<td class="medicineName">{{medicine.medicineName}}</td>
@@ -66,7 +66,7 @@
           <ul class="dropdown-menu">
             <li ng-repeat="medicine in whenNeededMedicines"><a ng-click="selectWhenNeededMedicine(medicine)">{{medicine.medicineName}} ({{medicine.dose}})</a></li>
           </ul>
-        </div>        
+        </div>
         <ul>
             <li ng-repeat="logEntry in whenNeededMedicineLog">{{logEntry.medicineName}}, {{logEntry.givenBy}} {{logEntry.givenTime}}</li>
         </ul>
@@ -74,8 +74,8 @@
 		<button class="btn btn-primary" ng-disabled="saveDisabled" ng-click="openSaveConfirmation()">
 			<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': storeComplete,'glyphicon-floppy-disk':!storeComplete}" aria-hidden="true"></span> Spara
 		</button>
-		
+
 	</form>
-	
+
 
 </p>

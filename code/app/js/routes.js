@@ -5,8 +5,8 @@ medicineApp.config(['$routeProvider',
         templateUrl: 'app/partials/start.html'
       }).
       when('/logMedicine', {
-        templateUrl: 'app/partials/create-log.html',
-        controller: 'CreateLogCtrl'
+        templateUrl: 'app/partials/medicine-log.html',
+        controller: 'MedicineLogCtrl'
       }).
       when('/logFood', {
         templateUrl: 'app/partials/log-food.html',
