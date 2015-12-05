@@ -63,6 +63,7 @@
    De nya doserna har sparats
  </div>
 </form>
+
 <h2>Mediciner att ge vid behov</h2>
 <table class="table table-striped">
   <thead>
@@ -73,11 +74,16 @@
     </tr>
   </thead>
   <tr ng-repeat="medicine in medicinesWhenNeeded">
-    <td>{{medicine.medicineName}}</td>
+    <td>
+      <select ng-if="medicine.isNew" ng-change="medicineForNewWhenNeededDoseSelected(this)" ng-model="medicine" ng-options="medicineType as medicineType.name for medicineType in medicines">
+      </select>
+      <span ng-if="!medicine.isNew">{{medicine.medicineName}}</span>
+    </td>
     <td><input type="text" ng-change="whenNeededDoseChangeMade();" ng-model="medicine.dose"/></td>
     <td><input type="text" ng-change="whenNeededDoseChangeMade();" ng-model="medicine.time"/></td>
   </tr>
 </table>
+<button class="btn btn-default" ng-click="addRowWhenNeededDoses()">Ny rad</button>
 <button class="btn" ng-class="{'btn-disabled': whenNeededDoseChangesSaved, 'btn-primary':!whenNeededDoseChangesSaved}" ng-click="saveWhenNeededDose()" >
   <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': whenNeededDoseChangesSaved, 'glyphicon-floppy-disk':!whenNeededDoseChangesSaved}" aria-hidden="true"></span>
   Spara dosförändringar
