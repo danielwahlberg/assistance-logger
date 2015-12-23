@@ -14,6 +14,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 
   $scope.feedingToStore = {};
   $scope.today = new Date();
+  $scope.tomorrow = (new Date().setDate(new Date().getDate() + 1));
 
   // TODO Get this from API instead
   $scope.foodTypes = [
