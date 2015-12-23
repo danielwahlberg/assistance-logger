@@ -17,13 +17,16 @@
 
    public function getLoggedFeeding() {
      $app = \Slim\Slim::getInstance();
+     $dateStart = new DateTime('06:00');
+     $dateEnd = clone $dateStart;
+     $dateEnd = $dateEnd->add(new DateInterval('PT24H'));
 
      $sql =
        "SELECT food.name, log.id, log.amount, food.unit, log.feedingStoredAt, a.firstName as givenBy
        FROM feedingLog log
        INNER JOIN foodType food ON food.id = log.foodType_id
        INNER JOIN assistant a ON a.id = log.assistant_id
-       WHERE DATE(feedingStoredAt) = DATE(NOW())
+       WHERE feedingStoredAt BETWEEN '{$dateStart->format('Y-m-d h:i:s')}' AND '{$dateEnd->format('Y-m-d h:i:s')}'
         AND log.patient_id = {$app->currentUser->patientId}
        ORDER BY feedingStoredAt
        ";
