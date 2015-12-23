@@ -17,7 +17,16 @@
 
    public function getLoggedFeeding() {
      $app = \Slim\Slim::getInstance();
-     $dateStart = new DateTime('06:00');
+     if(date('H') < 6) {
+       // Time is before 06:00; get data starting 6:00 yesterday
+       // (this is to include recent log entries in data returned)
+       $dateStart = new DateTime('06:00');
+       $dateStart = $dateStart->sub(new DateInterval('PT24H')); // Subtract 24 hours
+     } else {
+       // Time is after 06:00; get data starting 6:00 today
+       $dateStart = new DateTime('06:00');
+     }
+
      $dateEnd = clone $dateStart;
      $dateEnd = $dateEnd->add(new DateInterval('PT24H'));
 
