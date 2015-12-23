@@ -13,7 +13,26 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   });
 
   $scope.feedingToStore = {};
-  $scope.today = new Date();
+
+  $scope.getStartDate = function(){
+    var now = new Date();
+    if(now.getHours()<6) {
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate()-1);
+      return yesterday; // Before 06:00, we show the previous day's feeding log
+    } else {
+      return now; // At 06:00 and thereafter we show today's feeding log
+    }
+  };
+
+  $scope.getEndDate = function(){
+    var endDate = new Date();
+    return endDate.setDate($scope.startDate.getDate() + 1); // End date is 1 day after start date
+  };
+
+  $scope.startDate = $scope.getStartDate();
+  $scope.endDate = $scope.getEndDate();
+
 
   // TODO Get this from API instead
   $scope.foodTypes = [
