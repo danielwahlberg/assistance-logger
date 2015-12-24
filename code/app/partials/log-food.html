@@ -45,13 +45,24 @@
 		</div>
 	</div> <!-- /row -->
 	<div class="row">
-			<div class="col-md-3">&nbsp;</div> <!-- Space to the left of save button to align it properly-->
+		<div class="col-md-3">&nbsp;</div>
+		<div class="col-md-4">
 			<div name="spacer" style="height: 2em;">&nbsp;</div>
-			<button class="btn btn-primary btn-lg" ng-disabled="saveDisabled" ng-click="saveChanges()">
-				<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
-			</button>
-			<div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!allChangesSaved}" role="alert" id="saveCompletedInfo">
-				Matningen har sparats
+			<span class="input-group input-group-lg">
+				<input type="time" class="form-control" placeholder="Tid" ng-model="feedingToStore.givenTime"/> <!-- NEW! Not managed in controller! -->
+			</span>
+		</div>
+	</div> <!-- /row -->
+	<div class="row">
+			<div class="col-md-3">&nbsp;</div> <!-- Space to the left of save button to align it properly-->
+			<div class="col-md-4">
+				<div name="spacer" style="height: 2em;">&nbsp;</div>
+				<button class="btn btn-primary btn-lg" ng-disabled="saveDisabled" ng-click="saveChanges()">
+					<span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span> Spara
+				</button>
+				<div class="alert alert-success alert-dismissible" style="margin-top: 2em;" ng-class="{collapse:!allChangesSaved}" role="alert" id="saveCompletedInfo">
+					Matningen har sparats
+				</div>
 			</div>
 	</div> <!-- /row -->
 	<div name="spacer" style="height: 2em;">&nbsp;</div>
