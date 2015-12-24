@@ -13,6 +13,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   });
 
   $scope.feedingToStore = {};
+  $scope.feedingToStore.givenTime = new Date(); // Store "now" as feeding time by default
 
   $scope.getStartDate = function(){
     var now = new Date();
@@ -86,6 +87,11 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
   	} else {
       $scope.feedingToStore.assistant = $scope.currentAssistant;
     }
+
+    /*
+    $scope.feedingToStore.givenTime.setDate((new Date()).getDate()); // Only time is set by default; set today's date
+    $scope.feedingToStore.givenTime.setMonth((new Date()).getMonth());
+    $scope.feedingToStore.givenTime.setYear((new Date()).getFullYear()); */
 
     $http.post('/api/v1/food/feeding', $scope.feedingToStore)
     .success(
