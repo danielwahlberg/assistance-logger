@@ -95,11 +95,11 @@
        $app = \Slim\Slim::getInstance();
        $db = connect_db();
        $sql = "INSERT INTO feedingLog
-         (amount, foodType_id, assistant_id, feedingStoredAt, patient_id)
-         VALUES(?, ?, ?, NOW(), ?)";
+         (amount, foodType_id, assistant_id, feedingGivenAt, feedingStoredAt, patient_id)
+         VALUES(?, ?, ?, ?, NOW(), ?)";
        $db = connect_db();
        $stmt = $db->prepare($sql);
-       $stmt->bind_param('siii', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id'], $app->currentUser->patientId);
+       $stmt->bind_param('siisi', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id'], $arrInput['givenTime'], $app->currentUser->patientId);
        $stmt->execute();
       return $db->insert_id;
    }
