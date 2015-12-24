@@ -92,7 +92,7 @@
 			<tr ng-repeat="meal in meals">
 				<td>{{meal.name}}</td>
 				<td>{{meal.amount}} {{meal.unit}}</td>
-				<td>{{meal.givenBy}} {{meal.feedingStoredAt | date:short}}</td>
+				<td>{{meal.givenBy}} {{meal.feedingGivenAt | date:short}}</td>
 				<td><span class="glyphicon glyphicon-trash" style="cursor:pointer;" ng-click="deleteFeeding(meal)">&nbsp;</span></td>
 			</tr>
 			<tfoot>

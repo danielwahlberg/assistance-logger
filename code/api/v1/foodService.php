@@ -31,13 +31,13 @@
      $dateEnd = $dateEnd->add(new DateInterval('PT24H'));
 
      $sql =
-       "SELECT food.name, log.id, log.amount, food.unit, log.feedingStoredAt, a.firstName as givenBy
+       "SELECT food.name, log.id, log.amount, food.unit, log.feedingGivenAt, a.firstName as givenBy
        FROM feedingLog log
        INNER JOIN foodType food ON food.id = log.foodType_id
        INNER JOIN assistant a ON a.id = log.assistant_id
-       WHERE feedingStoredAt BETWEEN '{$dateStart->format('Y-m-d h:i:s')}' AND '{$dateEnd->format('Y-m-d h:i:s')}'
+       WHERE feedingGivenAt BETWEEN '{$dateStart->format('Y-m-d h:i:s')}' AND '{$dateEnd->format('Y-m-d h:i:s')}'
         AND log.patient_id = {$app->currentUser->patientId}
-       ORDER BY feedingStoredAt
+       ORDER BY feedingGivenAt
        ";
 
        $db = connect_db();
@@ -62,10 +62,10 @@
 
      foreach($arrFoodTypes as $typeName => $typeId) {
        $sql =
-         "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingStoredAt) as feedingDate
+         "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingGivenAt) as feedingDate
           from feedingLog log
           inner join foodType ft ON ft.id = log.foodType_id
-          where feedingStoredAt > DATE_ADD(NOW(), INTERVAL -1 MONTH)
+          where feedingGivenAt > DATE_ADD(NOW(), INTERVAL -1 MONTH)
             AND foodType_id = $typeId
             AND log.patient_id = {$app->currentUser->patientId}
           group by foodType_id, feedingDate
