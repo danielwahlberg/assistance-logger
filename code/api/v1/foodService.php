@@ -77,16 +77,16 @@
         while($row = $result->fetch_array(MYSQLI_ASSOC)){
 
           if(!isset($data[$row['feedingDate']]))
-            $data[$row['feedingDate']] = array('sumNutrition'=>0); // Initiate this date's array
+            $data[$row['feedingDate']] = array('sumNutrition'=>0, 'sumAmount'=>0); // Initiate this date's array
 
           $data[$row['feedingDate']][$typeName] = $row['amountOfFeedingTypeThisDay'];
           $data[$row['feedingDate']]['sumNutrition'] += ($row['amountOfFeedingTypeThisDay'] * $row['kcalPerUnit']);
+          $data[$row['feedingDate']]['sumAmount'] += $row['amountOfFeedingTypeThisDay'];
         }
     }
 
     // Loop through resulting array to add sums
     foreach($data as $feedingDate => $arrFeedingTypes) {
-      $data[$feedingDate]['sumAmount'] = array_sum($arrFeedingTypes);
       $data[$feedingDate]['feedingDate'] = $feedingDate;
     }
 
