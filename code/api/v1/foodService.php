@@ -57,12 +57,13 @@
      $app = \Slim\Slim::getInstance();
 
      $arrFoodTypes = array('Food'=>1,'GTube'=>2, 'Liquid'=>3); // Can be retrieved from DB instead if food types would become dynamic
+
      $db = connect_db();
      $data = array(); // Will be populated with feeding date as keys, and array as value. Each date's array contain $feedingTypeName => $amountForFeedingType
 
      foreach($arrFoodTypes as $typeName => $typeId) {
        $sql =
-         "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingGivenAt) as feedingDate
+         "SELECT sum(amount) as amountOfFeedingTypeThisDay, ft.name, DATE(feedingGivenAt) as feedingDate, ft.kcalPerUnit
           from feedingLog log
           inner join foodType ft ON ft.id = log.foodType_id
           where feedingGivenAt > DATE_ADD(NOW(), INTERVAL -1 MONTH)
@@ -76,9 +77,10 @@
         while($row = $result->fetch_array(MYSQLI_ASSOC)){
 
           if(!isset($data[$row['feedingDate']]))
-            $data[$row['feedingDate']] = array(); // Initiate this date's array
+            $data[$row['feedingDate']] = array('sumNutrition'=>0); // Initiate this date's array
 
           $data[$row['feedingDate']][$typeName] = $row['amountOfFeedingTypeThisDay'];
+          $data[$row['feedingDate']]['sumNutrition'] += ($row['amountOfFeedingTypeThisDay'] * $row['kcalPerUnit']);
         }
     }
 
