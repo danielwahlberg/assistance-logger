@@ -88,6 +88,9 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
       $scope.feedingToStore.assistant = $scope.currentAssistant;
     }
 
+    // Make sure local time is sent to server (wothout this, time zone info is removed when date is implicitly JSON.stringify:ed (done when angular sends using $http.post))
+    $scope.feedingToStore.givenTime.setHours($scope.feedingToStore.givenTime.getHours() - $scope.feedingToStore.givenTime.getTimezoneOffset() / 60);
+
     /*
     $scope.feedingToStore.givenTime.setDate((new Date()).getDate()); // Only time is set by default; set today's date
     $scope.feedingToStore.givenTime.setMonth((new Date()).getMonth());
