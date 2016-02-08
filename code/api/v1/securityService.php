@@ -44,6 +44,7 @@
       public $username, $name, $role, $patientId;
     }
 
+    class UserAlreadyExistsException extends Exception {}
 
     class SecurityService {
 
@@ -170,37 +171,40 @@
             return false;
         }
       }
-/*
+
       public function signUp($arrUserInfo) {
-
-        $strRole;
         $db = connect_db();
-
         if(isset($arrUserInfo['patientName']) && $arrUserInfo['patientName'] != '') {
           // Patient name provided; create a new patient which the signed up user becomes admin for
           $sqlPatient = "INSERT INTO patient (name) VALUES('".$db->real_escape_string($arrUserInfo['patientName'])."')";
-          if($db->query($sqlPatient) === true) {
-            $patientId = $db->insert_id();
+
+          if($db->query($sqlPatient) === TRUE ) {
+            $intPatientId = $db->insert_id;
             $strRole = 'PATIENTADMIN';
           }
         }
-        if(!isset($patientId)) {
+        if(!isset($intPatientId)) {
           // No new patient is created; connect new user to patient manually later
           // (using !isset to take care of cases when patient creation query fails)
           $strRole = 'ASSISTANT';
-          $patientId = 'NULL';
+          $intPatientId = 'NULL';
         }
 
 
-        $sqlUser = "INSERT INTO user (email, password, role, patient_id) VALUES('".$db->real_escape_string($arrUserInfo['email'])."','". SecurityService::getPasswordHash($arrUserInfo['newPassword']) ."','{$strRole}',{$patientId})";
+        $sqlUser = "INSERT INTO user (email, password, role, patient_id) VALUES('".$db->real_escape_string($arrUserInfo['email'])."','". SecurityService::getPasswordHash($arrUserInfo['newPassword']) ."','{$strRole}',{$intPatientId})";
 
-        if($db->query($sqlUser) === true)
-          $intUserId = $db->insert_id(); // Retrieve inserted ID if query was successful
-
+        if($db->query($sqlUser) === TRUE) {
+          $intUserId = $db->insert_id; // Retrieve inserted ID if query was successful
+        } elseif($db->errno == 1062) {
+          throw new UserAlreadyExistsException();
+        } else {
+            throw new Exception('User creation failed with code '. $db->errno .', message: '. $db->error);
+        }
         return array(
           'patient_id' => $intPatientId,
           'user_id' => $intUserId
         );
-      }/**/
+
+      }
     }
 ?>

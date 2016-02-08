@@ -31,10 +31,17 @@
   });
 
   $app->post('/sign-up/', function () use ($app) {
+
     $arrInput = $app->request->getBody();
     $security = new SecurityService();
-    $signupResult = $security->signUp($arrInput);
-    echo json_encode($signupResult);
+    try {
+      $signupResult = $security->signUp($arrInput);
+      echo json_encode($signupResult);
+    } catch(UserAlreadyExistsException $existsEx) {
+      echo json_encode(array('errorCode'=>1, 'error'=>'User already exists'));
+    } catch(Exception $e) {
+      echo json_encode(array('errorCode'=>2, 'error'=>'Creation failed'));
+    }
   });
 
   //
