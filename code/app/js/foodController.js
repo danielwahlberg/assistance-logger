@@ -14,6 +14,7 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
 
   $scope.feedingToStore = {};
   $scope.feedingToStore.givenTime = new Date(); // Store "now" as feeding time by default
+  $scope.timeCompensated = false; // When saving, keep track of that we haven't yet compensated for local time zone
 
   $scope.getStartDate = function(){
     var now = new Date();
@@ -88,8 +89,12 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
       $scope.feedingToStore.assistant = $scope.currentAssistant;
     }
 
-    // Make sure local time is sent to server (wothout this, time zone info is removed when date is implicitly JSON.stringify:ed (done when angular sends using $http.post))
-    $scope.feedingToStore.givenTime.setHours($scope.feedingToStore.givenTime.getHours() - $scope.feedingToStore.givenTime.getTimezoneOffset() / 60);
+    // Make sure local time is sent to server (without this, time zone info is removed when date is implicitly JSON.stringify:ed (done when angular sends using $http.post))
+    if(!$scope.timeCompensated) {
+      $scope.feedingToStore.givenTime.setHours($scope.feedingToStore.givenTime.getHours() - $scope.feedingToStore.givenTime.getTimezoneOffset() / 60);
+      $scope.timeCompensated = true; // Don't do this compensation again if the time hasn't changed
+    }
+
 
     /*
     $scope.feedingToStore.givenTime.setDate((new Date()).getDate()); // Only time is set by default; set today's date
