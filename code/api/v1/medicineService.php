@@ -84,6 +84,7 @@ class MedicineService{
 
     $arrDoseIds = array(); // dose id => $data array index
     $currentIdx = 0;
+		$data = array();
 
     while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
       $arrDoseIds[$row['doseId']] = $currentIdx++;
@@ -103,14 +104,16 @@ class MedicineService{
     $db = connect_db();
     $result = $db->query( $sql );
 
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) { // TODO Throws error when result is empty, e.g. for newly created patients
-      $data[$arrDoseIds[$row['doseId']]]['givenBy'] = $row['givenBy'];
-      $data[$arrDoseIds[$row['doseId']]]['givenTime'] = $row['givenTime'];
-      $data[$arrDoseIds[$row['doseId']]]['isGiven'] = true;
-      $data[$arrDoseIds[$row['doseId']]]['givenMedicineStored'] = true;
-    }
+		if($result !== FALSE) {
+	    while($row = $result->fetch_array(MYSQLI_ASSOC)) { 
+	      $data[$arrDoseIds[$row['doseId']]]['givenBy'] = $row['givenBy'];
+	      $data[$arrDoseIds[$row['doseId']]]['givenTime'] = $row['givenTime'];
+	      $data[$arrDoseIds[$row['doseId']]]['isGiven'] = true;
+	      $data[$arrDoseIds[$row['doseId']]]['givenMedicineStored'] = true;
+	    }
+		}
 
-			return $data;
+		return $data;
 	}
 
 	public function getAllMedicines() {
