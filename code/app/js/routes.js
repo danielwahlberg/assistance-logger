@@ -41,7 +41,7 @@ medicineApp.config(['$routeProvider',
         controller: 'LoginCtrl'
       }).
       when('/logout', {
-        templateUrl: 'app/partials/login.html',
+        templateUrl: 'app/partials/logout.html',
         controller: 'LogoutCtrl'
       }).
       otherwise({
