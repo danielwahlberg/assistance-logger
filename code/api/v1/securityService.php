@@ -195,6 +195,13 @@
 
         if($db->query($sqlUser) === TRUE) {
           $intUserId = $db->insert_id; // Retrieve inserted ID if query was successful
+
+          if($intPatientId != 'NULL') {
+              // Automatically create a dummy assistant for the new patient
+              $sql = "INSERT INTO assistant (firstName, startDate, user_id, patient_id) VALUES('Assistent', NOW(), {$intUserId}, {$intPatientId})";
+              $db->query($sql);
+          }
+
         } elseif($db->errno == 1062) {
           throw new UserAlreadyExistsException();
         } else {
@@ -202,7 +209,8 @@
         }
         return array(
           'patient_id' => $intPatientId,
-          'user_id' => $intUserId
+          'user_id' => $intUserId,
+          'role' => $strRole
         );
 
       }
