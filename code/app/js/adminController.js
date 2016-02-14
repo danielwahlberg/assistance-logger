@@ -91,7 +91,9 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     $http.post('/api/v1/medicines', $scope.medicines)
       .success(function(data){
         $scope.medicinesSaved = true;
-        alert('Saved!'); // Temp; show proper message in GUI instead
+        for(i = 0; i < $scope.medicines.length; i++) {
+          $scope.medicines[i].isNew = false; // All medicines are now stored, i.e. no longer new
+        }
       });
   };
 
