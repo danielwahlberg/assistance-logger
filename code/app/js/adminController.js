@@ -54,7 +54,9 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     if(confirm('Vill du ta bort '+ medicine.name + '?')) {
       $http.delete('/api/v1/medicines/' + medicine.id)
         .success(function() {
-          alert('removal done!');
+          // Remove the deleted row from the table
+          var index = $scope.medicines.indexOf(medicine);
+          $scope.medicines.splice(index, 1);
         });
     }
   }
