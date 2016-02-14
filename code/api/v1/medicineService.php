@@ -27,6 +27,7 @@ class MedicineService{
 	          ";
 
 	    $result = $db->query( $sql );
+			$data = array();
 	    while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
 	      $data[] = $row;
 	    }
@@ -102,7 +103,7 @@ class MedicineService{
     $db = connect_db();
     $result = $db->query( $sql );
 
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+    while($row = $result->fetch_array(MYSQLI_ASSOC)) { // TODO Throws error when result is empty, e.g. for newly created patients
       $data[$arrDoseIds[$row['doseId']]]['givenBy'] = $row['givenBy'];
       $data[$arrDoseIds[$row['doseId']]]['givenTime'] = $row['givenTime'];
       $data[$arrDoseIds[$row['doseId']]]['isGiven'] = true;
@@ -120,6 +121,7 @@ class MedicineService{
 			INNER JOIN patient_has_medicine has_med ON m.id = has_med.medicine_id
 			WHERE has_med.patient_id = {$app->currentUser->patientId}";
 		$db = connect_db();
+		$data = array();
 		$result = $db->query( $sql );
 		while ($row = $result->fetch_array(MYSQLI_ASSOC) ) {
 			$data[] = $row;
@@ -156,15 +158,31 @@ class MedicineService{
 		$app = \Slim\Slim::getInstance();
 
 		foreach ($arrInput as $currentInput) {
-      $sql = "
-        REPLACE INTO medicine (id, name, isActive)
-        VALUES(". $currentInput['medicine'].", {$currentInput['name']}, 1)
-      ";
+			if($currentInput['id'] == 0) {
+				// New medicine is being added; add to database and let DB generate an id
+				// TODO New patients adding a medicine gives new rows in medicine and patient_has_medicine, but removal only removes from patient_has_medicine
+				$sql = "
+	        INSERT INTO medicine (name, isActive)
+	        VALUES('{$currentInput['name']}', 1)
+	      ";
+
+				$db->query($sql); // Store new medicine
+				$intMedicineId = $db->insert_id;
+			} else {
+				$sql = "
+					UPDATE medicine SET name = '{$currentInput['name']}'
+					WHERE id = {$currentInput['id']}
+					";
+				$db->query($sql); // Store medicine update
+				$intMedicineId = $currentInput['id'];
+			}
+
+
       $sqlPatientMapping = "
 				REPLACE INTO patient_has_medicine (medicine_id, patient_id)
-				VALUES({$currentInput['medicine']}, {{$app->currentUser->patientId}})
+				VALUES({$intMedicineId}, {$app->currentUser->patientId})
 			";
-      $db->query($sql); // Store medicine name
+
 			$db->query($sqlPatientMapping); // Store mapping of new medicine to patient
 		}
 	}

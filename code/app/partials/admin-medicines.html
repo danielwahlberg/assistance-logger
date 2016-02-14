@@ -10,8 +10,8 @@
     </thead>
     <tr ng-repeat="medicine in medicines | filter: { isActive: '1' }">
       <td>
-        <span ng-if="medicine.isNew"><input type="text" /></span>
-        {{medicine.name}}
+        <span ng-if="medicine.isNew"><input type="text" ng-model="medicine.name" /></span>
+        <span ng-if="!medicine.isNew">{{medicine.name}}</span>
       </td>
       <td>
         <span class="glyphicon glyphicon-trash" style="cursor:pointer;" ng-click="inactivateMedicine(medicine)">&nbsp;</span>
@@ -20,7 +20,7 @@
   </table>
   <!-- // Add new row -->
   <button class="btn btn-default" ng-click="addRowMedicines()">Ny rad</button>
-  <button class="btn" ng-class="{'btn-disabled': regularDoseChangesSaved, 'btn-primary':!regularDoseChangesSaved}" ng-click="saveRegularDose()" >
+  <button class="btn" ng-class="{'btn-disabled': medicinesSaved, 'btn-primary':!regularDoseChangesSaved}" ng-click="saveMedicines()" >
     <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': regularDoseChangesSaved, 'glyphicon-floppy-disk':!regularDoseChangesSaved}" aria-hidden="true"></span>
     Spara nya mediciner
   </button>

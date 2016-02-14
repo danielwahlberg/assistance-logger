@@ -86,6 +86,15 @@ medicineApp.controller('AdminMainCtrl', function ($scope, $http) {
     $scope.whenNeededDoseChangesSaved = false;
   };
 
+  $scope.medicinesSaved = false;
+  $scope.saveMedicines = function() {
+    $http.post('/api/v1/medicines', $scope.medicines)
+      .success(function(data){
+        $scope.medicinesSaved = true;
+        alert('Saved!'); // Temp; show proper message in GUI instead
+      });
+  };
+
   $scope.saveRegularDose = function() {
     $scope.saveDose(false);
   };
