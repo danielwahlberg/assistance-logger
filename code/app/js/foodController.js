@@ -95,6 +95,12 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
       $scope.timeCompensated = true; // Don't do this compensation again if the time hasn't changed
     }
 
+    // If feeding seems to be stored before it was given, assume it was given the day before (e.g. given at 23:30 the 1st when stored 01:00 the 2nd)
+    if($scope.feedingToStore.givenTime.getHours() > (new Date()).getHours()) {
+      $scope.feedingToStore.givenTime.setDate($scope.feedingToStore.givenTime.getDate()-1);
+    }
+
+
 
     /*
     $scope.feedingToStore.givenTime.setDate((new Date()).getDate()); // Only time is set by default; set today's date
