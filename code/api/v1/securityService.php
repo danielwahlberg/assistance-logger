@@ -79,7 +79,7 @@
        */
       public static function validateSessionToken($tokenHttpHeader) {
         $strUsernameAndToken = base64_decode($tokenHttpHeader);
-        $arrUsernameAndToken = split(':', $strUsernameAndToken);
+        $arrUsernameAndToken = explode(':', $strUsernameAndToken);
         $sql = "SELECT email, role FROM user WHERE token = '{$arrUsernameAndToken[1]}' AND tokenValidThrough > NOW()";
 
         $db = connect_db();
