@@ -99,9 +99,10 @@
        $sql = "INSERT INTO feedingLog
          (amount, foodType_id, assistant_id, feedingGivenAt, feedingStoredAt, patient_id)
          VALUES(?, ?, ?, ?, NOW(), ?)";
+       $formattedDate = date ("Y-m-d H:i:s",strtotime($arrInput['givenTime']));
        $db = connect_db();
        $stmt = $db->prepare($sql);
-       $stmt->bind_param('siisi', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id'], $arrInput['givenTime'], $app->currentUser->patientId);
+       $stmt->bind_param('siisi', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id'], $formattedDate, $app->currentUser->patientId);
        $stmt->execute();
       return $db->insert_id;
    }
