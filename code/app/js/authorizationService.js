@@ -12,9 +12,9 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
             if(credentials.rememberMe)
               window.localStorage.authToken = response.sessionToken; // Store token in local storage if user has wished to be remembered
             $rootScope.$broadcast('auth-success');
-          } else
-            console.log('login attempt failed');
+          } else {
             $rootScope.$broadcast('auth-failed');
+          }
         })
         .error( function() {
           console.log('login attempt could not be processed');
