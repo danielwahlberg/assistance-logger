@@ -10,25 +10,17 @@
             if(!isset($_SESSION['user'])) {
               if($app->request->headers->get('x-session-token')!=null) {
                 error_log('No regular session - checking provided "remember me" tokens');
-                $tokenLoginSuccessful = SecurityService::validateSessionToken($app->request->headers->get('x-session-token'));
+                $arrTokenLoginResult = SecurityService::validateSessionToken($app->request->headers->get('x-session-token'));
+                $tokenLoginSuccessful = $arrTokenLoginResult['loginSuccessful'];
+                error_log('Token login result: '. ($tokenLoginSuccessful?'success':'failure'));
               } else {
                   $tokenLoginSuccessful = false; // There is not even a http header to try this for..
               }
-              if(!$tokenLoginSuccessful) {
-                error_log('Not logged in at all');
-                $app->response->status(401);
-              } elseif(SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
-                error_log('Token validation successful ');
-              } else {
-                error_log("Token validation successful, but user has not sufficient authorization ($requiredRole needed, $currentUser->role found)");
-                $app->response->status(401);
-              }
-
-              return;
             }
 
             $currentUser = $_SESSION['user'];
-            $app->currentUser = $currentUser; // TODO Handle token login cases
+            $app->currentUser = $currentUser;
+
             if($currentUser === NULL || !$currentUser instanceof User) {
               $app->response->status(401);
             } elseif(!SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
@@ -73,14 +65,14 @@
       }
 
       /**
-       * Tries to log in using only HTTP Header x-session-token
+       * Tries to log in using only HTTP Header x-session-token. Sets session variable 'user' if login was successful.
        * @param $tokenHttpHeader Base64 encoded username and token, as returned by "storeSessionToken"
-       * @return array with user details if token is valid and non-expired, false otherwise
+       * @return array with login result in element 'loginSuccessful' and, if token is valid and non-expired, user details
        */
       public static function validateSessionToken($tokenHttpHeader) {
         $strUsernameAndToken = base64_decode($tokenHttpHeader);
         $arrUsernameAndToken = explode(':', $strUsernameAndToken);
-        $sql = "SELECT email, role FROM user WHERE token = '{$arrUsernameAndToken[1]}' AND tokenValidThrough > NOW()";
+        $sql = "SELECT email, role, patient_id FROM user WHERE token = '{$arrUsernameAndToken[1]}' AND tokenValidThrough > NOW()";
 
         $db = connect_db();
         $result = $db->query($sql);
@@ -93,7 +85,7 @@
 
           $_SESSION['user'] = $user;
           $loginResult = array(
-            'loginStatus' => 'OK',
+            'loginSuccessful' => true,
             'username' => $user->username,
             'displayName' => $user->name,
             'role' => $user->role,
@@ -102,7 +94,9 @@
           // TODO Extend lifetime of token on each successful verification against it?
           return $loginResult;
         } else {
-          return false;
+          $loginResult = array(
+            'loginSuccessful' => false);
+          return $loginResult;
         }
       }
 
