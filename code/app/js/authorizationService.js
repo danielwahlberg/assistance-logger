@@ -27,7 +27,7 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
   }
 
   authService.isAuthenticated = function () {
-    return !!Session.userId;
+    return (Session.getCurrentUser() != null);
   };
 
   authService.isAuthorized = function (authorizedRoles) {
@@ -47,6 +47,7 @@ medicineApp.factory('AuthService', function ($http, Session, $rootScope) {
       .post('api/v1/logout')
       .then(function(){
           Session.destroy();
+          window.localStorage.authToken = null;
       });
 
   }
