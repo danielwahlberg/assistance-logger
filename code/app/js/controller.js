@@ -1,4 +1,5 @@
 medicineApp.controller('ApplicationController', function ($scope, AuthService) {
+
   $scope.currentUser = AuthService.getCurrentUser();
 
   //$scope.userRoles = USER_ROLES;
@@ -29,7 +30,7 @@ medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthSe
 
   // Initialize
   $scope.loginFailed = false;
-  $scope.showLoginRequiredMessage = true;
+  $scope.showLoginRequiredMessage = false;
 
   $rootScope.$on('not-auth-event', function(event, args){
     console.log("Tried to access a resource that requires login");
@@ -43,15 +44,15 @@ medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthSe
   });
   $rootScope.$on('auth-success', function(event, args){
     console.log("Login succeeded");
+    $location.path("/logMedicine"); // Login succeeded, redirect to log medicine
+    $scope.currentUser = AuthService.getCurrentUser();
     $scope.loginFailed = false;
     $scope.showLoginRequiredMessage = false;
+
   });
 
   $scope.attemptLogin = function() {
-    console.log("Remember me? "+ $scope.credentials.rememberMe);
-    AuthService.login($scope.credentials).then(function(httpResponse) {
-      $location.path("/logMedicine")
-    })
+    AuthService.login($scope.credentials);
   }
 });
 

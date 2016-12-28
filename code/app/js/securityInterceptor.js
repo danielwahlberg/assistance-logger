@@ -16,6 +16,7 @@ medicineApp.config(function($httpProvider, AUTH_EVENTS) {
             'responseError': function(rejection) {
                 if (rejection.status==401) {
                     // Response from backend was 401 ("Unauthorized"); redirect to login page in case we're not already there
+                    console.log('Tried to access a restricted resource');
                     if (!rejection.config.url.endsWith('/login'))
                     {
                         $rootScope.$broadcast('not-auth-event');
