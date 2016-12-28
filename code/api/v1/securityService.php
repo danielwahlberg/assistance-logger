@@ -18,14 +18,18 @@
               }
             }
 
+            if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
+              $app->halt(401, '');
+              return false; // User still not set in session; stop executing to avoid issues with using unset user object
+            }
             $currentUser = $_SESSION['user'];
             $app->currentUser = $currentUser;
 
             if($currentUser === NULL || !$currentUser instanceof User) {
-              $app->response->status(401);
+              $app->halt(401, '"message":"Not logged in"');
             } elseif(!SecurityService::isAuthorizedTo($currentUser, $requiredRole)) {
               error_log('Logged in with wrong role, '. $requiredRole .' needed, found '. $currentUser->role);
-              $app->response->status(401);
+              $app->halt(401, '"message":"Not sufficient privileges to view resource"');
             } else {
               // Do nothing, user has sufficient authorization
             }
@@ -72,6 +76,11 @@
       public static function validateSessionToken($tokenHttpHeader) {
         $strUsernameAndToken = base64_decode($tokenHttpHeader);
         $arrUsernameAndToken = explode(':', $strUsernameAndToken);
+        if(!is_array($arrUsernameAndToken) || count($arrUsernameAndToken)<2) {
+          error_log('Tried to validate malformed token');
+          return array('loginSuccessful'=> false);
+        }
+
         $sql = "SELECT email, role, patient_id FROM user WHERE token = '{$arrUsernameAndToken[1]}' AND tokenValidThrough > NOW()";
 
         $db = connect_db();
