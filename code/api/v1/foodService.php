@@ -96,6 +96,10 @@
    public function storeFeeding($arrInput) {
        $app = \Slim\Slim::getInstance();
        $db = connect_db();
+       if(substr($arrInput['givenTime'], -1)=='Z') {
+         // Possible trailing "Z" is removed, as strtotime otherwise gives a timestamp which in Sweden is 1 or 2 hours wrong (2 in case of daylight saving time)
+         $arrInput['givenTime'] = substr($arrInput['givenTime'], 0, strlen($arrInput['givenTime'])-1);
+       }
        $sql = "INSERT INTO feedingLog
          (amount, foodType_id, assistant_id, feedingGivenAt, feedingStoredAt, patient_id)
          VALUES(?, ?, ?, ?, NOW(), ?)";
