@@ -92,10 +92,6 @@ medicineApp.controller('FoodCtrl', function ($scope, $http, $modal, $log) {
     // Make sure local time is sent to server (without this, time zone info is removed when date is implicitly JSON.stringify:ed (done when angular sends using $http.post))
     if(!$scope.timeCompensated) {
       $scope.feedingToStore.givenTime.setHours($scope.feedingToStore.givenTime.getHours() - $scope.feedingToStore.givenTime.getTimezoneOffset() / 60);
-      if($scope.feedingToStore.givenTime.getHours() > (new Date()).getHours()) {
-        // If feeding seems to be stored before it was given, assume it was given the day before (e.g. given at 23:30 the 1st when stored 01:00 the 2nd)
-        $scope.feedingToStore.givenTime.setDate($scope.feedingToStore.givenTime.getDate()-1);
-      }
       $scope.timeCompensated = true; // Don't do this compensation again if the time hasn't changed
     }
 

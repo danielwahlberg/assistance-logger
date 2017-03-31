@@ -93,6 +93,9 @@
       return $data;
    }
 
+   /**
+    * Stores given feeding. Reduces the date by one if feeding appears to be given in the future.
+    */
    public function storeFeeding($arrInput) {
        $app = \Slim\Slim::getInstance();
        $db = connect_db();
@@ -100,10 +103,18 @@
          // Possible trailing "Z" is removed, as strtotime otherwise gives a timestamp which in Sweden is 1 or 2 hours wrong (2 in case of daylight saving time)
          $arrInput['givenTime'] = substr($arrInput['givenTime'], 0, strlen($arrInput['givenTime'])-1);
        }
+
        $sql = "INSERT INTO feedingLog
          (amount, foodType_id, assistant_id, feedingGivenAt, feedingStoredAt, patient_id)
          VALUES(?, ?, ?, ?, NOW(), ?)";
-       $formattedDate = date ("Y-m-d H:i:s",strtotime($arrInput['givenTime']));
+
+       $feedingGivenTimestamp = strtotime($arrInput['givenTime']);
+       if(time() - $feedingGivenTimestamp < 0) {
+         // If feeding seems to be stored before it was given, assume it was given the day before (e.g. given at 23:30 the 1st when stored 01:00 the 2nd)
+         $numberOfSecondsPerDay = 24 * 60 * 60;
+         $feedingGivenTimestamp -= $numberOfSecondsPerDay;
+       }
+       $formattedDate = date("Y-m-d H:i:s", $feedingGivenTimestamp);
        $db = connect_db();
        $stmt = $db->prepare($sql);
        $stmt->bind_param('siisi', $arrInput['amount'], $arrInput['foodType']['id'], $arrInput['assistant']['id'], $formattedDate, $app->currentUser->patientId);
