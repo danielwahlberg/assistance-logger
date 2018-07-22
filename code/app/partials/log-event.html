@@ -39,12 +39,16 @@
     <thead>
       <tr>
         <th>Händelse</th>
+        <th>Tid</th>
+        <th>Tid sedan förra händelsen</th>
         <th>Längd</th>
         <th>Kommentar</th>
       </tr>
     </thead>
     <tr ng-repeat="event in events">
       <td>{{event.eventTypeName}}</td>
+      <td>{{event.eventStoredAt}}</td>      
+      <td>{{event.timeSinceLastLog}}</td>
       <td>{{event.duration}}</td>
       <td>{{event.description}}</td>
     </tr>
