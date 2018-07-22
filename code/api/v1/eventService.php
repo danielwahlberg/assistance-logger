@@ -10,10 +10,11 @@
      $app = \Slim\Slim::getInstance();
 
      $sql =
-     "SELECT log.id, a.id, a.firstName, log.duration, log.description, type.name, type.id as typeId
+     "SELECT log.id, a.id, a.firstName, log.duration, log.description, log.eventStoredAt, type.name, type.id as typeId, TIMEDIFF(log.eventStoredAt, previousLogEntry.eventStoredAt) as timeSinceLastLog
       FROM eventLog log
         INNER JOIN assistant a ON a.id = log.assistant_id
         INNER JOIN eventType type ON type.id = log.eventType_id
+        INNER JOIN eventLog previousLogEntry ON previousLogEntry.id = (log.id - 1)
      WHERE DATE(log.eventStoredAt) = ?
       AND type.patient_id = ?";
 
@@ -22,12 +23,12 @@
      if($stmt = $db->prepare($sql)) {
        $stmt->bind_param('si', $givenDate, $app->currentUser->patientId);
 
-       $stmt->bind_result($logId, $assistantId, $assistantFirstName, $duration, $description, $eventTypeName, $eventTypeId);
+       $stmt->bind_result($logId, $assistantId, $assistantFirstName, $duration, $description, $eventStoredAt, $eventTypeName, $eventTypeId, $timeSinceLastLog);
        $stmt->execute();
 
        while($stmt->fetch()) {
          $toReturn[] = array('logId'=>$logId, 'assistantId'=>$assistantId, 'assistantFirstName'=>$assistantFirstName,
-          'duration'=> $duration, 'description'=>$description, 'eventTypeName'=>$eventTypeName, 'eventTypeId'=>$eventTypeId);
+          'duration'=> $duration, 'description'=>$description, 'eventStoredAt'=>$eventStoredAt, 'eventTypeName'=>$eventTypeName, 'eventTypeId'=>$eventTypeId, 'timeSinceLastLog'=> $timeSinceLastLog);
        }
        $stmt->close();
      }
