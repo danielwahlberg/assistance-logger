@@ -25,7 +25,7 @@ medicineApp.controller('EventCtrl', function ($scope, $http, $modal, $log) {
         $scope.events.push( // Dynamically update table with stored feeding
           {
             "eventId" : data, // The newly created id will be returned from backend (not used in model/view currently)
-            "timeSinceLast": "Reload to calculate",
+            "timeSinceLastLog": "Reload to calculate",
             "eventStoredAt":"Just now",
             "eventTypeName" : $scope.eventToStore.eventType.name,
             "duration" : $scope.eventToStore.duration,
