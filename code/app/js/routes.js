@@ -28,9 +28,17 @@ medicineApp.config(['$routeProvider',
         templateUrl: 'app/partials/view-log.html',
         controller: 'ViewLogCtrl'
       }).
+      when('/viewNews', {
+        templateUrl: 'app/partials/view-news.html',
+        controller: 'ViewNewsCtrl' 
+      }).
       when('/admin/medicines', {
         templateUrl: 'app/partials/admin-medicines.html',
         controller: 'AdminMainCtrl'
+      }).
+      when('/admin/news', {
+        templateUrl: 'app/partials/admin-news.html',
+        controller: 'AdminNewsCtrl' 
       }).
       when('/sign-up', {
         templateUrl: 'app/partials/register-user.html',

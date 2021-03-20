@@ -44,7 +44,7 @@ medicineApp.controller('LoginCtrl', function ($scope, $http, AUTH_EVENTS, AuthSe
   });
   $rootScope.$on('auth-success', function(event, args){
     console.log("Login succeeded");
-    $location.path("/logMedicine"); // Login succeeded, redirect to log medicine
+    $location.path("/viewNews"); // Login succeeded, redirect to news page
     $scope.currentUser = AuthService.getCurrentUser();
     $scope.loginFailed = false;
     $scope.showLoginRequiredMessage = false;

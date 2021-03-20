@@ -7,6 +7,7 @@
   $app->medicineService = new MedicineService();
   $app->assistantService = new AssistantService();
   $app->eventService = new EventService();
+  $app->newsService = new NewsService();
 
   $app->get('/hello/:name', function ($name) {
       echo "Hello, $name";
@@ -156,5 +157,35 @@
   	$data = $app->eventService->getEventTypes();
     echo json_encode($data);
   });
+
+  //
+  // News
+  //
+  $app->get('/news/list/', $authenticateForRole('assistant'), function() use ($app){
+    $data = $app->newsService->getAllNews(true);
+    echo json_encode($data); // NOTE! json_encode will return nothing in case $data contains characters can't handle, e.g. Swedish chars from db
+  });
+
+  $app->get('/news/list/all', $authenticateForRole('assistant'), function() use ($app){
+    $data = $app->newsService->getAllNews(false);
+    echo json_encode($data); // NOTE! json_encode will return nothing in case $data contains characters can't handle, e.g. Swedish chars from db
+  });  
+
+  /** Create new news item */
+  $app->post('/news/create/', $authenticateForRole('patientAdmin'), function() use($app){
+    $data = $app->request()->getBody();
+    $app->newsService->addNewsItem($data['title'], $data['body']);
+    error_log('saving: '. var_export($data, true));
+  });
+
+  $app->post('/news/unpublish/', $authenticateForRole('patientAdmin'), function() use($app){
+    $data = $app->request()->getBody();
+    $app->newsService->unpublishItem($data);
+  });
+
+  $app->post('/news/republish/', $authenticateForRole('patientAdmin'), function() use($app){
+    $data = $app->request()->getBody();    
+    $app->newsService->republishItem($data);
+  });  
 
 ?>

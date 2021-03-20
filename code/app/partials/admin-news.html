@@ -1,0 +1,45 @@
+<h1>Administrera nyheter</h1>
+
+<h2>Skapa nyhet</h2>
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="newEntryTitle" class="control-label">Titel</label>
+        <input type="text" class="form-control" id="newEntryTitle" ng-model="newEntry.title">
+    </div>
+
+    <div class="form-group">
+        <label for="newEntryBody">Brödtext</label>
+        <textarea rows="6" class="form-control" id="newEntryBody" ng-model="newEntry.body"></textarea>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary" ng-click="saveNewEntry()" ng-disabled="isSaveDisabled()">
+            <span class="glyphicon" ng-class="{'glyphicon-floppy-saved': allChangesSaved,'glyphicon-floppy-disk':!allChangesSaved}" aria-hidden="true"></span>
+            Skapa nyhet
+        </button>
+        
+    </div>
+</form>
+
+
+<h2>Avpublicera äldre nyheter</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Rubrik</th>
+            <th>Datum</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tr ng-repeat="entry in news">
+        <td ng-click="entry.expanded=!entry.expanded" style="font-weight: bold;" >{{entry.title}} 
+            <br />
+            <span ng-if="entry.expanded" style="font-weight: normal">{{entry.body}}</span>
+        </td>
+        <td>{{entry.publishedAt | date:short}}</td>
+        <td>
+            <button ng-if="entry.unpublishedAt==null" class="btn btn-danger" ng-click="unpublishEntry(entry)">Avpublicera</button>
+            <button ng-if="entry.unpublishedAt!=null" class="btn btn-success" ng-click="republishEntry(entry)">Återpublicera</button>
+        </td>
+    </tr>
+</table>

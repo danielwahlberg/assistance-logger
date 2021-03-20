@@ -1,0 +1,23 @@
+<h1>Visa nyheter</h1>
+<div class="row">
+	<div class="col-md-4">
+		Sök nyhet
+		<input ng-model="query">
+	</div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Rubrik</th>
+                <th>Datum</th>
+            </tr>
+        </thead>
+        <tr ng-repeat="entry in news">
+            <td ng-click="entry.expanded=!entry.expanded" style="font-weight: bold;" >{{entry.title}} 
+                <br />
+                <span ng-if="entry.expanded" style="font-weight: normal">texten: {{entry.body}}</span>
+            </td>
+            <td>{{entry.publishedAt | date:short}}</td>
+        </tr>
+    </table>
+</div>
